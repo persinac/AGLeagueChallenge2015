@@ -2,7 +2,7 @@
  * Created by APersinger on 12/03/14.
  */
 function buildBasicStats() {
-    $.ajax({
+    /*$.ajax({
         type: "POST",
         url: "/CRUD/lol/getBasicStats.php",
         dataType: "html",
@@ -37,6 +37,16 @@ function buildBasicStats() {
                     return $table.closest('.recent_games_size');
                 }
             });
+        }
+    });*/
+
+    $.ajax({
+        type: "POST",
+        url: "/CRUD/lol/test_getAPIKey.php",
+        dataType: "html",
+        success: function(response) {
+            console.log(response);
+            $("#dyn_content").html(response);
         }
     });
 }

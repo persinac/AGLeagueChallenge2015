@@ -1,4 +1,6 @@
-<?php require_once('../../Connections/lol_conn.php'); ?>
+<?php
+require_once('../../Connections/lol_api_challenge_conn.php');
+?>
 <?php
 /**
  * Created by PhpStorm.
@@ -10,7 +12,7 @@
 //include('../../CRUD/library/Champion.php');
 
 class riot_api {
-    var $key = '826a7fbd-5a9f-492d-bab4-1aef227a7d7d';
+    var $key = '';
     var $region = '';
     var $url_prefix = 'https://na.api.pvp.net/api/lol/';
     public $mys;
@@ -96,6 +98,22 @@ class riot_api {
         return $retVal;
     }
 
+}
+
+class Buckets extends riot_api {
+    var $region = '';
+    var $challenge_api_version = '4.1';
+    var $beginTime = -1;
+
+    function __construct($reg, $key, $host, $user, $pass, $database) {
+        $this->region = $reg;
+        $this->key = $key;
+        parent::__construct($reg, $host, $user, $pass, $database);
+    }
+
+    function TestingOutKeyLocation() {
+        return $this->key;
+    }
 }
 
 class LeagueChampions extends riot_api {
