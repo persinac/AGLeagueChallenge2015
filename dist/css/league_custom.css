@@ -1,0 +1,75 @@
+@charset "utf-8";
+/* CSS Document */
+
+a:hover {
+    cursor: pointer;
+}
+
+.purple_team {
+    background-color: rgba(130, 73, 206, 0.8) !important;
+}
+
+.blue_team {
+    background-color: rgba(66, 139, 218, 0.8) !important;
+}
+
+.chart div {
+    font: 10px sans-serif;
+    background-color: steelblue;
+    text-align: right;
+    padding: 3px;
+    margin: 1px;
+    color: white;
+}
+
+.chart text {
+    fill: white;
+    font: 10px sans-serif;
+    text-anchor: end;
+}
+
+.axis {
+    shape-rendering: crispEdges;
+}
+
+.x.axis line {
+    stroke: black;
+}
+
+.y.axis line {
+    stroke: black;
+}
+
+.axis text {
+    font-size: 12px;
+}
+
+.recent_games_size {
+    height: 220px;
+    overflow-x: auto;
+}
+
+.add_border {
+    border: 2px solid;
+    border-radius: 5px;
+}
+
+.add_gray_fill {
+    background-color: rgba(221,221,221, 0.4);
+}
+
+.indent_me {
+    margin-left: 50px;
+}
+
+.header_bg {
+    background: palegoldenrod;
+}
+
+.underline_me {
+    text-decoration: underline;
+}
+
+.groupWinperc {
+    background-color: #00FF00 !important;
+}

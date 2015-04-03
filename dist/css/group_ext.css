@@ -1,0 +1,11 @@
+@charset "utf-8";
+/* CSS Document */
+
+.border_ext {
+    border: 2px solid #2779aa;
+    border-radius: 10px;
+}
+
+.wrkout_chal_size_control {
+    max-height: 400px;
+}
