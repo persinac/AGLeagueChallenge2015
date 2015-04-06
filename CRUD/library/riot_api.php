@@ -9,7 +9,8 @@ require_once('../../Connections/lol_api_challenge_conn.php');
  * Time: 9:16 AM
  */
 
-//include('../../CRUD/library/Champion.php');
+include('../../CRUD/library/Champion.php');
+include('../../CRUD/library/Team.php');
 
 class riot_api {
     var $key = '';
@@ -103,7 +104,8 @@ class riot_api {
 class Buckets extends riot_api {
     var $region = '';
     var $challenge_api_version = '4.1';
-    var $beginTime = -1;
+    var $beginDate = -1;
+    var $url_bucket = '';
 
     function __construct($reg, $key, $host, $user, $pass, $database) {
         $this->region = $reg;
@@ -113,6 +115,28 @@ class Buckets extends riot_api {
 
     function TestingOutKeyLocation() {
         return $this->key;
+    }
+
+    function GetBucketOfMatches() {
+        $url_postfix = $this->GetRegion() . '/v'.$this->challenge_api_version.'/game/ids?beginDate='.$this->beginDate.'&api_key=' . $this->GetKey();
+        $this->SetBucketURL($url_postfix);
+        return $this->MakeCURLCall($this->url_bucket, "Buckets - GetBucketOfMatches()");
+    }
+
+    function SetBeginDate($beginDate) {
+        $this->beginDate = $beginDate;
+    }
+
+    function SetBucketURL($data) {
+        $this->url_bucket = $this->GetURLPre() . '' . $data;
+    }
+
+    function GetBeginDate() {
+        return $this->beginDate;
+    }
+
+    function GetBucketURL() {
+        return $this->url_bucket;
     }
 }
 
@@ -259,8 +283,9 @@ class LeagueMatchDetails extends LeagueGames {
     var $url_match = '';
     var $match_version = '2.2';
 
-    function __construct($mid, $region, $host, $user, $pass, $database) {
+    function __construct($mid, $region, $key, $host, $user, $pass, $database) {
         $this->matchid = $mid;
+        $this->key = $key;
         parent::__construct($region, $host, $user, $pass, $database);
     }
 
@@ -360,12 +385,12 @@ class LeagueMatchDetails extends LeagueGames {
                         $champion->SetTeamID($val[$j]->teamId);
                         $champion->SetRole($val[$j]->timeline->role);
                         $champion->SetLane($val[$j]->timeline->lane);
-                        $champion->SetChampLevel($val[$j]->champLevel);
-                        $champion->SetDeaths($val[$j]->deaths);
-                        $champion->SetAssists($val[$j]->assists);
-                        $champion->SetKills($val[$j]->kills);
-                        $champion->SetGoldEarned($val[$j]->goldEarned);
-                        $champion->SetGoldSpent($val[$j]->goldSpent);
+                        $champion->SetChampLevel($val[$j]->stats->champLevel);
+                        $champion->SetDeaths($val[$j]->stats->deaths);
+                        $champion->SetAssists($val[$j]->stats->assists);
+                        $champion->SetKills($val[$j]->stats->kills);
+                        $champion->SetGoldEarned($val[$j]->stats->goldEarned);
+                        $champion->SetGoldSpent($val[$j]->stats->goldSpent);
                         $testing[] = $champion;
                         $champion = null;
                     }
@@ -385,13 +410,13 @@ class LeagueMatchDetails extends LeagueGames {
                             $team1 = new Team($val[$j]->baronKills, $val[$j]->dragonKills,
                                 $val[$j]->firstBaron, $val[$j]->firstBlood, $val[$j]->firstDragon,
                                 $val[$j]->firstInhibitor, $val[$j]->firstTower, $val[$j]->inhibitorKills,
-                                $val[$j]->teamId, $val[$j]->towerKills, $val[$j]->vilemawKills);
+                                $val[$j]->teamId, $val[$j]->towerKills, $val[$j]->vilemawKills, $val[$j]->winner);
                             $team_arr[] = $team1;
                         } else  if($val[$j]->teamId == 200) {
                             $team2 = new Team($val[$j]->baronKills, $val[$j]->dragonKills,
                                 $val[$j]->firstBaron, $val[$j]->firstBlood, $val[$j]->firstDragon,
                                 $val[$j]->firstInhibitor, $val[$j]->firstTower, $val[$j]->inhibitorKills,
-                                $val[$j]->teamId, $val[$j]->towerKills, $val[$j]->vilemawKills);
+                                $val[$j]->teamId, $val[$j]->towerKills, $val[$j]->vilemawKills, $val[$j]->winner);
                             $team_arr[] = $team2;
                         }
                     }
@@ -399,6 +424,10 @@ class LeagueMatchDetails extends LeagueGames {
             }
         }
         return $team_arr;
+    }
+
+    function GetURL() {
+        return $this->url_match;
     }
 }
 

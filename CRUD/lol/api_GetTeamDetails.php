@@ -1,4 +1,6 @@
-<?php require_once('../../Connections/lol_conn.php'); ?>
+<?php require_once('../../Connections/lol_conn.php');
+require_once('../../keys/key.php');
+?>
 <?php
 /**
  * Created by PhpStorm.
@@ -24,7 +26,7 @@ $league_priority = new league();
 $game_id = $_POST['gameid'];
 $html = '<div name="api_team_match_det_row" class="row">';
 $html .= '<div name="api_team_match_det_div" class="col-lg-12">';
-$toGetFellowPlayers = new LeagueMatchDetails($game_id, $_SESSION['region'], $lol_host, $lol_un, $lol_pw, $lol_db);
+$toGetFellowPlayers = new LeagueMatchDetails($game_id, $_SESSION['region'], $my_key, $lol_host, $lol_un, $lol_pw, $lol_db);
 $create_date = '';
 $outcome = '';
 $temp_my_team = 1;
@@ -69,7 +71,7 @@ $html .= '</div></div>';
 //$champion->NewConnection($lol_host, $lol_un, $lol_pw, $lol_db);
 $league_priority->NewConnection($lol_host, $lol_un, $lol_pw, $lol_db);
 
-buildMatchDetails($_SESSION['gameid'], $league_priority, $lol_host, $lol_un, $lol_pw, $lol_db);
+buildMatchDetails($_SESSION['gameid'], $league_priority, $my_key, $lol_host, $lol_un, $lol_pw, $lol_db);
 
 AddSummonerID($all_players, $_SESSION['test_champ']);
 $fourth = $_SESSION['test_champ'];
@@ -235,9 +237,9 @@ echo json_encode($toReturn);
 $champion->CloseConnection();
 $league_priority->CloseConnection();
 
-function buildMatchDetails($gid, $league_obj, $host, $un, $pw, $db) {
+function buildMatchDetails($gid, $league_obj, $t_key, $host, $un, $pw, $db) {
     $string = "";
-    $match = new LeagueMatchDetails($gid, $_SESSION['region'], $host, $un, $pw, $db);
+    $match = new LeagueMatchDetails($gid, $_SESSION['region'], $t_key, $host, $un, $pw, $db);
     $string = json_decode($match->GetMatchDetails());
     $_SESSION['test_champ'] = $match->ParticipantDetails($string);
     $_SESSION['team_details'] = $match->TeamDetails($string);

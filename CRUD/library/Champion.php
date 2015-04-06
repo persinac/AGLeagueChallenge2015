@@ -8,18 +8,18 @@
 
 class Champion {
 
-    var $summonerID = 0;
-    var $participantID = 0;
-    var $champID = 0;
-    var $team = 0;
+    var $summonerId = 0;
+    var $participantId = 0;
+    var $championId = 0;
+    var $teamId = 0;
     var $name = "";
     var $cs = 0;
     var $kills = 0;
     var $assists = 0;
     var $deaths = 0;
-    var $goldearned = 0;
-    var $goldspent = 0;
-    var $champLevel = 0;
+    var $goldEarned = 0;
+    var $goldSpent = 0;
+    var $championLevel = 0;
     var $lane = "";
     var $role = "";
     var $firstBloodAssist = 0;
@@ -57,9 +57,9 @@ class Champion {
         $this->kills = $kills;
         $this->deaths = $deaths;
         $this->assists = $assists;
-        $this->goldearned = $goldearn;
-        $this->goldspent = $goldspent;
-        $this->champLevel = $champLevel;
+        $this->goldEarned = $goldearn;
+        $this->goldSpent = $goldspent;
+        $this->championLevel = $champLevel;
         $this->firstBloodAssist = $firstBloodAssist;
         $this->firstBloodKill = $firstBloodKill;
         $this->firstInhibitorKill = $firstInhibitorKill;
@@ -98,15 +98,15 @@ class Champion {
     }
 
     function SetGoldEarned($ge) {
-        $this->goldearned = $ge;
+        $this->goldEarned = $ge;
     }
 
     function SetGoldSpent($gs) {
-        $this->goldspent = $gs;
+        $this->goldSpent = $gs;
     }
 
     function SetChampLevel($n) {
-        $this->champLevel = $n;
+        $this->championLevel = $n;
     }
 
     function SetFirstBloodAssist($k) {
@@ -166,15 +166,15 @@ class Champion {
     }
 
     function SetParticipantID($d) {
-        $this->participantID = $d;
+        $this->participantId = $d;
     }
 
     function SetChampionID($id) {
-        $this->champID = $id;
+        $this->championId = $id;
     }
 
     function SetTeamID($t) {
-        $this->team = $t;
+        $this->teamId = $t;
     }
 
     function SetLane($gs) {
@@ -186,7 +186,7 @@ class Champion {
     }
 
     function SetSummonerID($id) {
-        $this->summonerID = $id;
+        $this->summonerId = $id;
     }
 
     /*************** Getters *********************/
@@ -211,15 +211,15 @@ class Champion {
     }
 
     function GetGoldEarned() {
-        return $this->goldearned;
+        return $this->goldEarned;
     }
 
     function GetGoldSpent() {
-        return $this->goldspent;
+        return $this->goldSpent;
     }
 
     function GetChampLevel() {
-        return $this->champLevel;
+        return $this->championLevel;
     }
 
     function GetFirstBloodAssist() {
@@ -279,15 +279,15 @@ class Champion {
     }
 
     function GetParticipantID() {
-        return $this->participantID;
+        return $this->participantId;
     }
 
     function GetChampionID() {
-        return $this->champID;
+        return $this->championId;
     }
 
     function GetTeamID() {
-        return $this->team;
+        return $this->teamId;
     }
 
     function GetLane() {
@@ -299,6 +299,6 @@ class Champion {
     }
 
     function GetSummonerID() {
-        return $this->summonerID;
+        return $this->summonerId;
     }
 }

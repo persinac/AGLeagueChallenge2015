@@ -18,10 +18,11 @@ class Team {
     var $teamId = 0;
     var $towerKills = 0;
     var $vilemawKills = 0;
+    var $winner = 0;
 
     function __construct($bk = 0, $dk = 0, $fBaron = 0, $fBlood = 0,
                         $fDragon = 0, $fInhib = 0, $fTower = 0, $inhibKills = 0,
-                        $teamId = 0, $tk = 0, $vk = 0) {
+                        $teamId = 0, $tk = 0, $vk = 0, $winner = 0) {
 
         $this->baronKills = $bk;
         $this->dragonKills = $dk;
@@ -34,5 +35,6 @@ class Team {
         $this->teamId = $teamId;
         $this->towerKills = $tk;
         $this->vilemawKills = $vk;
+        $this->winner = $winner;
     }
 }
