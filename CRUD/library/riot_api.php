@@ -12,6 +12,12 @@ require_once('../../Connections/lol_api_challenge_conn.php');
 include('../../CRUD/library/Champion.php');
 include('../../CRUD/library/Team.php');
 
+/**
+ * Class riot_api
+ * Used to make calls to riot api and parse the data
+ * We're trying not to perform any of OUR CRUD operations in any of
+ * these classes.
+ */
 class riot_api {
     var $key = '';
     var $region = '';
