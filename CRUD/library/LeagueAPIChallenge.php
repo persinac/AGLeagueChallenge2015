@@ -28,10 +28,17 @@ class LeagueAPIChallenge {
     var $temp_table = '';
     var $global_counter = 0;
     var $recursive_calls = 0;
+    var $region = '';
+
+    function __construct($reg, $host, $user, $pass, $database) {
+        $this->region = $reg;
+        $this->NewConnection($host, $user, $pass, $database);
+    }
 
     /**
      * Connection functions
      */
+
     function NewConnection($host, $user, $pass, $database)
     {
         $this->mys = mysqli_connect($host, $user, $pass, $database);
@@ -99,11 +106,14 @@ class LeagueAPIChallenge {
         return $retVal;
     }
 
-    function InsertNewMatch($bucketId, $matchId, $region)
+    function InsertIntoMatchHeader($bucketId, $matchId, $mapId, $region,
+                                    $platformId, $matchMode, $matchType,
+                                    $matchCreation, $matchDuration, $queueType,
+                                    $season, $matchVersion)
     {
         $retVal = -1;
         $this->mys->autocommit(FALSE);
-        $query = "INSERT INTO Buckets VALUES(?,?,?)";
+        $query = "INSERT INTO MatchHeader VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
         if ($bucketId <= 1) {
             $retVal = 3;
         } else {
@@ -111,7 +121,10 @@ class LeagueAPIChallenge {
                 $retVal = 4;
             } else {
                 $stmt = $this->mys->prepare($query);
-                $stmt->bind_param('iis', $bucketId, $matchId, $region);
+                $stmt->bind_param('iiissssiisss', $bucketId, $matchId, $mapId, $region
+                                                , $platformId, $matchMode, $matchType
+                                                , $matchCreation, $matchDuration, $queueType
+                                                , $season, $matchVersion);
                 if ($result = $stmt->execute()) {
                     $stmt->close();
                     $this->mys->commit();
@@ -125,4 +138,25 @@ class LeagueAPIChallenge {
         return $retVal;
     }
 
+    function InsertIntoMatchDetails($matchId, $frameInterval)
+    {
+        $retVal = -1;
+        $this->mys->autocommit(FALSE);
+        $query = "INSERT INTO MatchDetails VALUES(?,?)";
+        if ($matchId <= 1) {
+            $retVal = 4;
+        } else {
+            $stmt = $this->mys->prepare($query);
+            $stmt->bind_param('ii', $matchId, $frameInterval);
+            if ($result = $stmt->execute()) {
+                $stmt->close();
+                $this->mys->commit();
+                $retVal = 1;
+            } else {
+                $retVal = 0;
+                $this->mys->rollback();
+            }
+        }
+        return $retVal;
+    }
 }

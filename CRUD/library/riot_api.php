@@ -432,6 +432,18 @@ class LeagueMatchDetails extends LeagueGames {
         return $team_arr;
     }
 
+    function GetFrameInterval($arr) {
+        $frameInterval = -1;
+        foreach($arr AS $i=>$val) {
+            echo "****** GETFRAMEINTVERAL: $i *****";
+            if($i == 'timeline') {
+                //var_dump($i);
+                $frameInterval = $i->frameInterval;
+            }
+        }
+        return $frameInterval;
+    }
+
     function GetURL() {
         return $this->url_match;
     }
