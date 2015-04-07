@@ -52,7 +52,9 @@ for($i = 0; $i < sizeof($matches); $i++) {
             , $string->matchType, ($string->matchCreation / 1000), $string->matchDuration
             , $string->queueType, $string->season, $string->matchVersion);
     $final_html .= '<p>INSERT MATCHHEADER RETVAL: ' . $retVal . '</p>';
-    $final_html .= '<p>FRAMEINTERVAL: ' . $match->GetFrameInterval($string) . '</p>';
+    $retVal = $my_db_operations->InsertIntoMatchDetails($curr_matchId, $match->GetFrameInterval($string));
+    $final_html .= '<p>INSERT MATCHDETAIL RETVAL: ' . $retVal . '</p>';
+
     $test_champ = $match->ParticipantDetails($string);
     $team_details = $match->TeamDetails($string);
     $final_html .= '<h4 style="text-indent: 50px;">Some Participant data: </h4>';
@@ -61,8 +63,12 @@ for($i = 0; $i < sizeof($matches); $i++) {
     foreach($test_champ AS $champ) {
         if($champ->GetTeamID() == 100) {
             $team_100 .= '<p style="text-indent: 100px;">Champion ID: '.$champ->GetChampionID().' </p>';
+            $team_100 .= '<p style="text-indent: 100px;">Total Damage Dealt: '.$champ->GetTotalDamageDealt().' </p>';
+            $team_100 .= '<p style="text-indent: 100px;">Kills: '.$champ->GetKills().' </p>';
         } else {
             $team_200 .= '<p style="text-indent: 100px;">Champion ID: '.$champ->GetChampionID().' </p>';
+            $team_200 .= '<p style="text-indent: 100px;">Total Damage Dealt: '.$champ->GetTotalDamageDealt().' </p>';
+            $team_200 .= '<p style="text-indent: 100px;">Kills: '.$champ->GetKills().' </p>';
         }
     }
     $final_html .= $team_100 . $team_200;

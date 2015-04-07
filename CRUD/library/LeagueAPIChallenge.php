@@ -159,4 +159,40 @@ class LeagueAPIChallenge {
         }
         return $retVal;
     }
+
+    function InsertIntoMatchParticipantDetails($matchId, $teamId, $participantId, $spell1Id
+                                , $spell2Id, $championId, $highestAchievedSeasonTier, $champLevel
+                                , $item0, $item1, $item2, $item3, $item4, $item5, $item6
+                                , $kills, $doubleKills, $tripleKills, $quadraKills, $pentaKills
+                                , $unrealKills, $largestKillingSpree, $deaths, $assists
+                                , $totalDamageDealt, $totalDamageDealtToChampions, $totalDamageTaken
+                                , $largestCriticalStrike, $totalHeal, $goldEarned, $goldSpent
+                                , $role, $lane)
+    {
+        $retVal = -1;
+        $this->mys->autocommit(FALSE);
+        $query = "INSERT INTO MatchDetails VALUES(?,?)";
+        if ($matchId <= 1) {
+            $retVal = 4;
+        } else {
+            $stmt = $this->mys->prepare($query);
+            $stmt->bind_param('iiiiiisiiiiiiiiiiiiiiiiiiiiiiiiii', $matchId, $teamId, $participantId, $spell1Id
+                , $spell2Id, $championId, $highestAchievedSeasonTier, $champLevel
+                , $item0, $item1, $item2, $item3, $item4, $item5, $item6
+                , $kills, $doubleKills, $tripleKills, $quadraKills, $pentaKills
+                , $unrealKills, $largestKillingSpree, $deaths, $assists
+                , $totalDamageDealt, $totalDamageDealtToChampions, $totalDamageTaken
+                , $largestCriticalStrike, $totalHeal, $goldEarned, $goldSpent
+                , $role, $lane);
+            if ($result = $stmt->execute()) {
+                $stmt->close();
+                $this->mys->commit();
+                $retVal = 1;
+            } else {
+                $retVal = 0;
+                $this->mys->rollback();
+            }
+        }
+        return $retVal;
+    }
 }

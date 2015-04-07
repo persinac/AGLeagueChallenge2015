@@ -316,7 +316,7 @@ class LeagueMatchDetails extends LeagueGames {
      * - see api_interface for reference
      */
     function GetMatchDetails($isBackground = 0) {
-        $url_postfix = $this->matchid . '?api_key=' . $this->GetKey();
+        $url_postfix = $this->matchid . '?includeTimeline=true&api_key=' . $this->GetKey();
         $this->SetMatchURL($url_postfix);
         if($isBackground > 0) {
             $stringForApiLog = "BACKGROUND PROCESS: LeagueMatchDetails - GetMatchDetails()";
@@ -385,8 +385,34 @@ class LeagueMatchDetails extends LeagueGames {
             if($i == 'participants') {
                 if (is_array($val)) {
                     for ($j = 0; $j < 10; $j++) {
-                        $champion = new Champion();
-                        $champion->SetParticipantID($val[$j]->participantId);
+                        /****
+                         $teamId = 0, $participantId = 0, $championId = 0, $kills = 0, $assists = 0,
+                        $deaths = 0, $goldearn = 0, $goldspent = 0,
+                        $champLevel = 0, $firstBloodAssist = 0, $firstBloodKill = 0,
+                        $firstInhibitorKill = 0, $firstInhibitorAssist = 0, $firstTowerKill = 0,
+                        $firstTowerAssist = 0, $inhibitorKills = 0, $killingSprees = 0,
+                        $largestKillingSpree = 0, $largestCriticalStrike = 0, $towerKills = 0, $doubleKills = 0,
+                        $tripleKills = 0, $quadraKills = 0, $pentaKills = 0, $unrealKills = 0 ,
+                        $highestAchSeasonTier = "", $spell1Id = 0, $spell2Id = 0, $item0 = 0,
+                        $item1 = 0, $item2 = 0, $item3 = 0, $item4 = 0, $item5 = 0, $item6 = 0,
+                        $spell1Id = 0, $spell2Id = 0, $highestAchSeasonTier = "",
+                        $totalDamageDealt = 0, $totalDamageDealtToChampions = 0, $totalDamageTaken = 0,
+                        $totalHeal = 0
+                         */
+                        $champion = new Champion($val[$j]->teamId, $val[$j]->participantId,
+                            $val[$j]->championId, $val[$j]->stats->kills, $val[$j]->stats->assists,
+                            $val[$j]->stats->deaths, $val[$j]->stats->goldEarned, $val[$j]->stats->goldSpent,
+                            $val[$j]->stats->champLevel,$val[$j]->stats->firstBloodAssist, $val[$j]->stats->FirstBloodKill,
+                            $val[$j]->stats->firstInhibitorKill, $val[$j]->stats->firstInhibitorAssist,
+                            $val[$j]->stats->firstTowerKill, $val[$j]->stats->firstTowerAssist,
+                            $val[$j]->stats->inhibitorKills, $val[$j]->stats->killingSprees,
+                            $val[$j]->stats->largestKillingSpree, $val[$j]->stats->largestCriticalStrike,
+                            $val[$j]->stats->towerKills, $val[$j]->stats->doubleKills, $val[$j]->stats->tripleKills,
+                            $val[$j]->stats->quadraKills, $val[$j]->stats->pentaKills, $val[$j]->stats->unrealKills,
+                            $val[$j]->highestAchievedSeasonTier, $val[$j]->stats->totalDamageDealt,
+                            $val[$j]->stats->totalDamageDealtToChampions, $val[$j]->stats->totalDamageTaken,
+                            $val[$j]->stats->totalHeal);
+                        /*$champion->SetParticipantID($val[$j]->participantId);
                         $champion->SetChampionID($val[$j]->championId);
                         $champion->SetTeamID($val[$j]->teamId);
                         $champion->SetRole($val[$j]->timeline->role);
@@ -396,7 +422,7 @@ class LeagueMatchDetails extends LeagueGames {
                         $champion->SetAssists($val[$j]->stats->assists);
                         $champion->SetKills($val[$j]->stats->kills);
                         $champion->SetGoldEarned($val[$j]->stats->goldEarned);
-                        $champion->SetGoldSpent($val[$j]->stats->goldSpent);
+                        $champion->SetGoldSpent($val[$j]->stats->goldSpent);*/
                         $testing[] = $champion;
                         $champion = null;
                     }
@@ -435,10 +461,8 @@ class LeagueMatchDetails extends LeagueGames {
     function GetFrameInterval($arr) {
         $frameInterval = -1;
         foreach($arr AS $i=>$val) {
-            echo "****** GETFRAMEINTVERAL: $i *****";
             if($i == 'timeline') {
-                //var_dump($i);
-                $frameInterval = $i->frameInterval;
+                $frameInterval = $val->frameInterval;
             }
         }
         return $frameInterval;
