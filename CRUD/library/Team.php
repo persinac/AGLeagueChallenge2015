@@ -7,34 +7,64 @@
  */
 
 class Team {
+    var $teamId = 0;
     var $baronKills = 0;
     var $dragonKills = 0;
-    var $firstBaron = 0;
+    var $totalKills = 0;
+    var $totalAssists = 0;
+    var $totalDeaths = 0;
+    var $totalGoldEarned = 0;
+    var $totalGoldSpent = 0;
+    var $winner = 0;
     var $firstBlood = 0;
-    var $firstDragon = 0;
-    var $firstInhibitor = 0;
     var $firstTower = 0;
-    var $inhibitorKills = 0;
-    var $teamId = 0;
+    var $firstInhibitor = 0;
+    var $firstBaron = 0;
+    var $firstDragon = 0;
     var $towerKills = 0;
     var $vilemawKills = 0;
-    var $winner = 0;
 
-    function __construct($bk = 0, $dk = 0, $fBaron = 0, $fBlood = 0,
+    function __construct($baronKills = 0, $dragonKills = 0, $fBaron = 0, $fBlood = 0,
                         $fDragon = 0, $fInhib = 0, $fTower = 0, $inhibKills = 0,
-                        $teamId = 0, $tk = 0, $vk = 0, $winner = 0) {
+                        $teamId = 0, $towerKills = 0, $vilemawKills = 0, $winner = 0,
+                        $totalKills, $totalAssists, $totalDeaths, $totalGoldEarned,
+                        $totalGoldSpent) {
 
-        $this->baronKills = $bk;
-        $this->dragonKills = $dk;
-        $this->firstBaron = $fBaron;
-        $this->firstBlood = $fBlood;
-        $this->firstDragon = $fDragon;
-        $this->firstInhibitor = $fInhib;
-        $this->firstTower = $fTower;
-        $this->inhibitorKills = $inhibKills;
         $this->teamId = $teamId;
-        $this->towerKills = $tk;
-        $this->vilemawKills = $vk;
+        $this->baronKills = $baronKills;
+        $this->dragonKills = $dragonKills;
+        $this->totalKills = $totalKills;
+        $this->totalAssists = $totalAssists;
+        $this->totalDeaths = $totalDeaths;
+        $this->totalGoldEarned = $totalGoldEarned;
+        $this->totalGoldSpent = $totalGoldSpent;
         $this->winner = $winner;
+        $this->firstBlood = $fBlood;
+        $this->firstTower = $fTower;
+        $this->firstInhibitor = $fInhib;
+        $this->firstBaron = $fBaron;
+        $this->firstDragon = $fDragon;
+        $this->towerKills = $towerKills;
+        $this->vilemawKills = $vilemawKills;
+    }
+
+    function SetTotalKills($num) {
+        $this->totalKills = $num;
+    }
+
+    function SetTotalAssists($num) {
+        $this->totalAssists = $num;
+    }
+
+    function SetTotalDeaths($num) {
+        $this->totalDeaths = $num;
+    }
+
+    function SetTotalGoldEarned($num) {
+        $this->totalGoldEarned = $num;
+    }
+
+    function SetTotalGoldSpent($num) {
+        $this->totalGoldSpent = $num;
     }
 }

@@ -385,44 +385,36 @@ class LeagueMatchDetails extends LeagueGames {
             if($i == 'participants') {
                 if (is_array($val)) {
                     for ($j = 0; $j < 10; $j++) {
-                        /****
-                         $teamId = 0, $participantId = 0, $championId = 0, $kills = 0, $assists = 0,
-                        $deaths = 0, $goldearn = 0, $goldspent = 0,
-                        $champLevel = 0, $firstBloodAssist = 0, $firstBloodKill = 0,
-                        $firstInhibitorKill = 0, $firstInhibitorAssist = 0, $firstTowerKill = 0,
-                        $firstTowerAssist = 0, $inhibitorKills = 0, $killingSprees = 0,
-                        $largestKillingSpree = 0, $largestCriticalStrike = 0, $towerKills = 0, $doubleKills = 0,
-                        $tripleKills = 0, $quadraKills = 0, $pentaKills = 0, $unrealKills = 0 ,
-                        $highestAchSeasonTier = "", $spell1Id = 0, $spell2Id = 0, $item0 = 0,
-                        $item1 = 0, $item2 = 0, $item3 = 0, $item4 = 0, $item5 = 0, $item6 = 0,
-                        $spell1Id = 0, $spell2Id = 0, $highestAchSeasonTier = "",
-                        $totalDamageDealt = 0, $totalDamageDealtToChampions = 0, $totalDamageTaken = 0,
-                        $totalHeal = 0
-                         */
                         $champion = new Champion($val[$j]->teamId, $val[$j]->participantId,
                             $val[$j]->championId, $val[$j]->stats->kills, $val[$j]->stats->assists,
                             $val[$j]->stats->deaths, $val[$j]->stats->goldEarned, $val[$j]->stats->goldSpent,
-                            $val[$j]->stats->champLevel,$val[$j]->stats->firstBloodAssist, $val[$j]->stats->FirstBloodKill,
+                            $val[$j]->stats->champLevel,$val[$j]->stats->firstBloodAssist, $val[$j]->stats->firstBloodKill,
                             $val[$j]->stats->firstInhibitorKill, $val[$j]->stats->firstInhibitorAssist,
                             $val[$j]->stats->firstTowerKill, $val[$j]->stats->firstTowerAssist,
                             $val[$j]->stats->inhibitorKills, $val[$j]->stats->killingSprees,
                             $val[$j]->stats->largestKillingSpree, $val[$j]->stats->largestCriticalStrike,
                             $val[$j]->stats->towerKills, $val[$j]->stats->doubleKills, $val[$j]->stats->tripleKills,
                             $val[$j]->stats->quadraKills, $val[$j]->stats->pentaKills, $val[$j]->stats->unrealKills,
-                            $val[$j]->highestAchievedSeasonTier, $val[$j]->stats->totalDamageDealt,
+                            $val[$j]->highestAchievedSeasonTier, $val[$j]->spell1Id, $val[$j]->spell2Id,
+                            $val[$j]->stats->item0, $val[$j]->stats->item1, $val[$j]->stats->item2,
+                            $val[$j]->stats->item3, $val[$j]->stats->item4, $val[$j]->stats->item5,
+                            $val[$j]->stats->item6, $val[$j]->stats->totalDamageDealt,
                             $val[$j]->stats->totalDamageDealtToChampions, $val[$j]->stats->totalDamageTaken,
-                            $val[$j]->stats->totalHeal);
-                        /*$champion->SetParticipantID($val[$j]->participantId);
-                        $champion->SetChampionID($val[$j]->championId);
-                        $champion->SetTeamID($val[$j]->teamId);
-                        $champion->SetRole($val[$j]->timeline->role);
-                        $champion->SetLane($val[$j]->timeline->lane);
-                        $champion->SetChampLevel($val[$j]->stats->champLevel);
-                        $champion->SetDeaths($val[$j]->stats->deaths);
-                        $champion->SetAssists($val[$j]->stats->assists);
-                        $champion->SetKills($val[$j]->stats->kills);
-                        $champion->SetGoldEarned($val[$j]->stats->goldEarned);
-                        $champion->SetGoldSpent($val[$j]->stats->goldSpent);*/
+                            $val[$j]->stats->totalHeal, $val[$j]->timeline->role, $val[$j]->timeline->lane,
+                            $val[$j]->stats->minionsKilled, $val[$j]->stats->neutralMinionsKilled,
+                            $val[$j]->stats->neutralMinionsKilledTeamJungle, $val[$j]->stats->neutralMinionsKilledEnemyJungle,
+                            $val[$j]->stats->combatPlayerScore, $val[$j]->stats->objectivePlayerScore,
+                            $val[$j]->stats->totalPlayerScore, $val[$j]->stats->totalScoreRank,
+                            $val[$j]->stats->magicDamageDealtToChampions, $val[$j]->stats->physicalDamageDealtToChampions,
+                            $val[$j]->stats->trueDamageDealtToChampions, $val[$j]->stats->visionWardsBoughtInGame,
+                            $val[$j]->stats->sightWardsBoughtInGame,
+                            $val[$j]->stats->magicDamageDealt, $val[$j]->stats->physicalDamageDealt,
+                            $val[$j]->stats->trueDamageDealt, $val[$j]->stats->magicDamageTaken,
+                            $val[$j]->stats->physicalDamageTaken, $val[$j]->stats->trueDamageTaken,
+                            $val[$j]->stats->towerKills, $val[$j]->stats->wardsKilled,
+                            $val[$j]->stats->wardsPlaced, $val[$j]->stats->killingSprees,
+                            $val[$j]->stats->largestMultiKill, $val[$j]->stats->totalUnitsHealed,
+                            $val[$j]->stats->totalTimeCrowdControlDealt);
                         $testing[] = $champion;
                         $champion = null;
                     }
@@ -442,13 +434,15 @@ class LeagueMatchDetails extends LeagueGames {
                             $team1 = new Team($val[$j]->baronKills, $val[$j]->dragonKills,
                                 $val[$j]->firstBaron, $val[$j]->firstBlood, $val[$j]->firstDragon,
                                 $val[$j]->firstInhibitor, $val[$j]->firstTower, $val[$j]->inhibitorKills,
-                                $val[$j]->teamId, $val[$j]->towerKills, $val[$j]->vilemawKills, $val[$j]->winner);
+                                $val[$j]->teamId, $val[$j]->towerKills, $val[$j]->vilemawKills, $val[$j]->winner,
+                                0,0,0,0,0);
                             $team_arr[] = $team1;
                         } else  if($val[$j]->teamId == 200) {
                             $team2 = new Team($val[$j]->baronKills, $val[$j]->dragonKills,
                                 $val[$j]->firstBaron, $val[$j]->firstBlood, $val[$j]->firstDragon,
                                 $val[$j]->firstInhibitor, $val[$j]->firstTower, $val[$j]->inhibitorKills,
-                                $val[$j]->teamId, $val[$j]->towerKills, $val[$j]->vilemawKills, $val[$j]->winner);
+                                $val[$j]->teamId, $val[$j]->towerKills, $val[$j]->vilemawKills, $val[$j]->winner,
+                                0,0,0,0,0);
                             $team_arr[] = $team2;
                         }
                     }
@@ -456,6 +450,86 @@ class LeagueMatchDetails extends LeagueGames {
             }
         }
         return $team_arr;
+    }
+
+    function MatchBans($arr, $matchId = 0) {
+        $bans = (object)array('matchId' => $matchId, 'first' => '', 'second' => ''
+        , 'third' => '', 'fourth' => '', 'fifth' => '', 'sixth' => '');
+        foreach($arr AS $i=>$val) {
+            if($i == 'teams') {
+                if (is_array($val)) {
+                    for ($j = 0; $j < 3; $j++) {
+                        if ($val[$j]->teamId == 100) {
+                            $bans->first = $val[$j]->bans[0]->championId;
+                            $bans->third = $val[$j]->bans[1]->championId;
+                            $bans->fifth = $val[$j]->bans[2]->championId;
+                        } else if ($val[$j]->teamId == 200) {
+                            $bans->second = $val[$j]->bans[0]->championId;
+                            $bans->fourth = $val[$j]->bans[1]->championId;
+                            $bans->sixth = $val[$j]->bans[2]->championId;
+                        }
+                    }
+                }
+            }
+        }
+        return $bans;
+    }
+
+    function MatchEvents($arr) {
+        $event_arr = array();
+        foreach($arr AS $i=>$val) {
+            if($i == 'timeline') {
+                for($i = 1; $i < sizeof($val->frames); $i++) {
+                    foreach($val->frames[$i]->events AS $event) {
+                        $event_obj = (object)array('eventType' => '',
+                            'timestamp' => '',
+                            'skillSlot' => '',
+                            'participantId' => '',
+                            'levelUpType' => '',
+                            'itemId' => '',
+                            'creatorId' => '',
+                            'wardType' => '',
+                            'killerId' => '',
+                            'victimId' => '',
+                            'assistingParticipantIds' => '',
+                            'pos_x' => '',
+                            'pos_y' => '',
+                            'teamId' => '',
+                            'laneType' => '',
+                            'buildingType' => '',
+                            'towerType' => '',);
+                        echo "EVENT TYPE: " . $event->eventType . ", ";
+                        $event_obj->eventType = $event->eventType;
+                        $event_obj->timestamp = $event->timestamp;
+                        if($event->eventType == 'SKILL_LEVEL_UP') {
+                            $event_obj->skillSlot = $event->skillSlot;
+                            $event_obj->participantId = $event->participantId;
+                            $event_obj->levelUpType = $event->levelUpType;
+                        } else if($event->eventType == 'ITEM_PURCHASED') {
+                            $event_obj->itemId = $event->itemId;
+                            $event_obj->participantId = $event->participantId;
+                        } else if($event->eventType == 'ITEM_UNDO') {
+                            $event_obj->itemId = $event->itemId;
+                            $event_obj->participantId = $event->participantId;
+                        } else if($event->eventType == 'ITEM_DESTROYED') {
+                            $event_obj->itemId = $event->itemId;
+                            $event_obj->participantId = $event->participantId;
+                        } else if($event->eventType == 'WARD_PLACED') {
+                            $event_obj->creatorId = $event->creatorId;
+                            $event_obj->wardType = $event->wardType;
+                        } else if($event->eventType == 'CHAMPION_KILL') {
+                            $event_obj->killerId = $event->killerId;
+                            $event_obj->victimId = $event->victimId;
+                            $event_obj->pos_x = $event->position->x;
+                            $event_obj->pos_y = $event->position->y;
+                        }
+                        $event_arr[] = $event_obj;
+                    }
+                }
+
+            }
+        }
+        return $event_arr;
     }
 
     function GetFrameInterval($arr) {

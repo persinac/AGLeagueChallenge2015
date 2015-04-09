@@ -171,12 +171,12 @@ class LeagueAPIChallenge {
     {
         $retVal = -1;
         $this->mys->autocommit(FALSE);
-        $query = "INSERT INTO MatchDetails VALUES(?,?)";
+        $query = "INSERT INTO MatchParticipantDetails VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         if ($matchId <= 1) {
             $retVal = 4;
         } else {
             $stmt = $this->mys->prepare($query);
-            $stmt->bind_param('iiiiiisiiiiiiiiiiiiiiiiiiiiiiiiii', $matchId, $teamId, $participantId, $spell1Id
+            $stmt->bind_param('iiiiiisiiiiiiiiiiiiiiiiiiiiiiiiss', $matchId, $teamId, $participantId, $spell1Id
                 , $spell2Id, $championId, $highestAchievedSeasonTier, $champLevel
                 , $item0, $item1, $item2, $item3, $item4, $item5, $item6
                 , $kills, $doubleKills, $tripleKills, $quadraKills, $pentaKills
@@ -184,6 +184,185 @@ class LeagueAPIChallenge {
                 , $totalDamageDealt, $totalDamageDealtToChampions, $totalDamageTaken
                 , $largestCriticalStrike, $totalHeal, $goldEarned, $goldSpent
                 , $role, $lane);
+            if ($result = $stmt->execute()) {
+                $stmt->close();
+                $this->mys->commit();
+                $retVal = 1;
+            } else {
+                $retVal = 0;
+                $this->mys->rollback();
+            }
+        }
+        return $retVal;
+    }
+
+    function InsertIntoMatchParticipantDetails_Extended($matchId,
+                                                        $teamId,
+                                                        $participantId,
+                                                        $minionsKilled,
+                                                        $neutralMinionsKilled,
+                                                        $neutralMinionsKilledTeamJungle,
+                                                        $neutralMinionsKilledEnemyJungle,
+                                                        $combatPlayerScore,
+                                                        $objectivePlayerScore,
+                                                        $totalPlayerScore,
+                                                        $totalScoreRank,
+                                                        $magicDamageDealtToChampions,
+                                                        $physicalDamageDealtToChampions,
+                                                        $trueDamageDealtToChampions,
+                                                        $visionWardsBoughtInGame,
+                                                        $sightWardsBoughtInGame,
+                                                        $magicDamageDealt,
+                                                        $physicalDamageDealt,
+                                                        $trueDamageDealt,
+                                                        $magicDamageTaken,
+                                                        $physicalDamageTaken,
+                                                        $trueDamageTaken,
+                                                        $firstBloodKill,
+                                                        $firstBloodAssist,
+                                                        $firstTowerKill,
+                                                        $firstTowerAssist,
+                                                        $firstInhibitorKill,
+                                                        $firstInhibitorAssist,
+                                                        $inhibitorKills,
+                                                        $towerKills,
+                                                        $wardsPlaced,
+                                                        $wardsKilled,
+                                                        $largestMultiKill,
+                                                        $killingSprees,
+                                                        $totalUnitsHealed,
+                                                        $totalTimeCrowdControlDealt)
+    {
+        $retVal = -1;
+        $this->mys->autocommit(FALSE);
+        $query = "INSERT INTO MatchParticipantDetails_Extended VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,
+                                                              ?,?,?)";
+        if ($matchId <= 1) {
+            $retVal = 4;
+        } else {
+            $stmt = $this->mys->prepare($query);
+            $stmt->bind_param('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii', $matchId,
+                $teamId,
+                $participantId,
+                $minionsKilled,
+                $neutralMinionsKilled,
+                $neutralMinionsKilledTeamJungle,
+                $neutralMinionsKilledEnemyJungle,
+                $combatPlayerScore,
+                $objectivePlayerScore,
+                $totalPlayerScore,
+                $totalScoreRank,
+                $magicDamageDealtToChampions,
+                $physicalDamageDealtToChampions,
+                $trueDamageDealtToChampions,
+                $visionWardsBoughtInGame,
+                $sightWardsBoughtInGame,
+                $magicDamageDealt,
+                $physicalDamageDealt,
+                $trueDamageDealt,
+                $magicDamageTaken,
+                $physicalDamageTaken,
+                $trueDamageTaken,
+                $firstBloodKill,
+                $firstBloodAssist,
+                $firstTowerKill,
+                $firstTowerAssist,
+                $firstInhibitorKill,
+                $firstInhibitorAssist,
+                $inhibitorKills,
+                $towerKills,
+                $wardsPlaced,
+                $wardsKilled,
+                $largestMultiKill,
+                $killingSprees,
+                $totalUnitsHealed,
+                $totalTimeCrowdControlDealt);
+            if ($result = $stmt->execute()) {
+                $stmt->close();
+                $this->mys->commit();
+                $retVal = 1;
+            } else {
+                $retVal = 0;
+                $this->mys->rollback();
+            }
+        }
+        return $retVal;
+    }
+
+    function InsertIntoMatchTeamDetails($matchId,
+                                        $teamId,
+                                        $baronKills,
+                                        $dragonKills,
+                                        $totalKills,
+                                        $totalAssists,
+                                        $totalDeaths,
+                                        $totalGoldEarned,
+                                        $totalGoldSpent,
+                                        $winner,
+                                        $firstBlood,
+                                        $firstTower,
+                                        $firstInhibitor,
+                                        $firstBaron,
+                                        $firstDragon,
+                                        $vilemawKills)
+    {
+        $retVal = -1;
+        $this->mys->autocommit(FALSE);
+        $query = "INSERT INTO MatchTeamDetails VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        if ($matchId <= 1) {
+            $retVal = 4;
+        } else {
+            $stmt = $this->mys->prepare($query);
+            $stmt->bind_param('iiiiiiiiiiiiiiii', $matchId,
+                $teamId,
+                $baronKills,
+                $dragonKills,
+                $totalKills,
+                $totalAssists,
+                $totalDeaths,
+                $totalGoldEarned,
+                $totalGoldSpent,
+                $winner,
+                $firstBlood,
+                $firstTower,
+                $firstInhibitor,
+                $firstBaron,
+                $firstDragon,
+                $vilemawKills);
+            if ($result = $stmt->execute()) {
+                $stmt->close();
+                $this->mys->commit();
+                $retVal = 1;
+            } else {
+                $retVal = 0;
+                $this->mys->rollback();
+            }
+        }
+        return $retVal;
+    }
+
+    function InsertIntoMatchBans($matchId,
+                                        $firstBan,
+                                        $secondBan,
+                                        $thirdBan,
+                                        $fourthBan,
+                                        $fifthBan,
+                                        $sixthBan)
+    {
+        $retVal = -1;
+        $this->mys->autocommit(FALSE);
+        $query = "INSERT INTO MatchBans VALUES(?,?,?,?,?,?,?)";
+        if ($matchId <= 1) {
+            $retVal = 4;
+        } else {
+            $stmt = $this->mys->prepare($query);
+            $stmt->bind_param('iiiiiii', $matchId,
+                $firstBan,
+                $secondBan,
+                $thirdBan,
+                $fourthBan,
+                $fifthBan,
+                $sixthBan);
             if ($result = $stmt->execute()) {
                 $stmt->close();
                 $this->mys->commit();

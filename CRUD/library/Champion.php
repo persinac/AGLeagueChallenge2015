@@ -13,7 +13,6 @@ class Champion {
     var $championId = 0;
     var $teamId = 0;
     var $name = "";
-    var $cs = 0;
     var $kills = 0;
     var $assists = 0;
     var $deaths = 0;
@@ -22,27 +21,13 @@ class Champion {
     var $championLevel = 0;
     var $lane = "";
     var $role = "";
-    var $firstBloodAssist = 0;
-    var $firstBloodKill = 0;
-    var $firstInhibitorKill = 0;
-    var $firstInhibitorAssist = 0;
-    var $firstTowerKill = 0;
-    var $firstTowerAssist = 0;
-    var $inhibitorKills = 0;
-    var $killingSprees = 0;
     var $largestKillingSpree = 0;
     var $largestCriticalStrike = 0;
-    var $towerKills = 0;
     var $doubleKills = 0;
     var $tripleKills = 0;
     var $quadraKills = 0;
     var $pentaKills = 0;
     var $unrealKills = 0;
-    var $neutralMinionsKilled = 0;
-    var $sightwardsBought = 0;
-    var $visionwardsBought = 0;
-    var $wardsKilled = 0;
-    var $wardsPlaced = 0;
     var $spell1Id = 0;
     var $spell2Id = 0;
     var $highestAchievedSeasonTier = "";
@@ -57,20 +42,132 @@ class Champion {
     var $totalDamageDealtToChampions = 0;
     var $totalDamageTaken = 0;
     var $totalHeal = 0;
+    /*Extended*/
+    var $minionsKilled = 0;
+    var $neutralMinionsKilled = 0;
+    var $neutralMinionsKilledTeamJungle = 0;
+    var $neutralMinionsKilledEnemyJungle = 0;
+    var $combatPlayerScore = 0;
+    var $objectivePlayerScore = 0;
+    var $totalPlayerScore = 0;
+    var $totalScoreRank = 0;
+    var $magicDamageDealtToChampions = 0;
+    var $physicalDamageDealtToChampions = 0;
+    var $trueDamageDealtToChampions = 0;
+    var $visionWardsBoughtInGame = 0;
+    var $sightWardsBoughtInGame = 0;
+    var $magicDamageDealt = 0;
+    var $physicalDamageDealt = 0;
+    var $trueDamageDealt = 0;
+    var $magicDamageTaken = 0;
+    var $physicalDamageTaken = 0;
+    var $trueDamageTaken = 0;
+    var $firstBloodAssist = 0;
+    var $firstBloodKill = 0;
+    var $firstInhibitorKill = 0;
+    var $firstInhibitorAssist = 0;
+    var $firstTowerKill = 0;
+    var $firstTowerAssist = 0;
+    var $inhibitorKills = 0;
+    var $towerKills = 0;
+    var $wardsKilled = 0;
+    var $wardsPlaced = 0;
+    var $killingSprees = 0;
+    var $largestMultiKill = 0;
+    var $totalUnitsHealed = 0;
+    var $totalTimeCrowdControlDealt = 0;
 
-
-    function __construct($teamId = 0, $participantId = 0, $championId = 0, $kills = 0, $assists = 0,
-                        $deaths = 0, $goldearn = 0, $goldspent = 0,
-                        $champLevel = 0, $firstBloodAssist = 0, $firstBloodKill = 0,
+    /**
+     * Anything that is = 0 or = "" is in the extended table and is not required
+     *
+     * @param $teamId
+     * @param $participantId
+     * @param $championId
+     * @param $kills
+     * @param $assists
+     * @param $deaths
+     * @param $goldearn
+     * @param $goldspent
+     * @param $champLevel
+     * @param int $firstBloodAssist
+     * @param int $firstBloodKill
+     * @param int $firstInhibitorKill
+     * @param int $firstInhibitorAssist
+     * @param int $firstTowerKill
+     * @param int $firstTowerAssist
+     * @param int $inhibitorKills
+     * @param int $killingSprees
+     * @param $largestKillingSpree
+     * @param $largestCriticalStrike
+     * @param int $towerKills
+     * @param $doubleKills
+     * @param $tripleKills
+     * @param $quadraKills
+     * @param $pentaKills
+     * @param $unrealKills
+     * @param $highestAchSeasonTier
+     * @param $spell1Id
+     * @param $spell2Id
+     * @param $item0
+     * @param $item1
+     * @param $item2
+     * @param $item3
+     * @param $item4
+     * @param $item5
+     * @param $item6
+     * @param $totalDamageDealt
+     * @param $totalDamageDealtToChampions
+     * @param $totalDamageTaken
+     * @param $totalHeal
+     * @param $role
+     * @param $lane
+     * @param int $minionsKilled
+     * @param int $neutralMinionsKilled
+     * @param int $neutralMinionsKilledTeamJungle
+     * @param int $neutralMinionsKilledEnemyJungle
+     * @param int $combatPlayerScore
+     * @param int $objectivePlayerScore
+     * @param int $totalPlayerScore
+     * @param int $totalScoreRank
+     * @param int $magicDamageDealtToChampions
+     * @param int $physicalDamageDealtToChampions
+     * @param int $trueDamageDealtToChampions
+     * @param int $visionWardsBoughtInGame
+     * @param int $sightWardsBoughtInGame
+     * @param int $magicDamageDealt
+     * @param int $physicalDamageDealt
+     * @param int $trueDamageDealt
+     * @param int $magicDamageTaken
+     * @param int $physicalDamageTaken
+     * @param int $trueDamageTaken
+     * @param int $towerKills
+     * @param int $wardsKilled
+     * @param int $wardsPlaced
+     * @param int $killingSprees
+     * @param int $largestMultiKill
+     * @param int $totalUnitsHealed
+     * @param int $totalTimeCrowdControlDealt
+     */
+    function __construct($teamId, $participantId, $championId, $kills, $assists,
+                        $deaths, $goldearn, $goldspent,
+                        $champLevel, $firstBloodAssist = 0, $firstBloodKill = 0,
                         $firstInhibitorKill = 0, $firstInhibitorAssist = 0, $firstTowerKill = 0,
                         $firstTowerAssist = 0, $inhibitorKills = 0, $killingSprees = 0,
-                        $largestKillingSpree = 0, $largestCriticalStrike = 0, $towerKills = 0, $doubleKills = 0,
-                        $tripleKills = 0, $quadraKills = 0, $pentaKills = 0, $unrealKills = 0 ,
-                        $highestAchSeasonTier = "", $spell1Id = 0, $spell2Id = 0, $item0 = 0,
-                        $item1 = 0, $item2 = 0, $item3 = 0, $item4 = 0, $item5 = 0, $item6 = 0,
-                        $spell1Id = 0, $spell2Id = 0, $highestAchSeasonTier = "",
-                        $totalDamageDealt = 0, $totalDamageDealtToChampions = 0, $totalDamageTaken = 0,
-                        $totalHeal = 0) {
+                        $largestKillingSpree, $largestCriticalStrike, $towerKills = 0, $doubleKills,
+                        $tripleKills, $quadraKills, $pentaKills, $unrealKills,
+                        $highestAchSeasonTier, $spell1Id, $spell2Id, $item0,
+                        $item1, $item2, $item3, $item4, $item5, $item6,
+                        $totalDamageDealt, $totalDamageDealtToChampions, $totalDamageTaken,
+                        $totalHeal, $role, $lane, $minionsKilled = 0,
+                        $neutralMinionsKilled = 0, $neutralMinionsKilledTeamJungle = 0,
+                        $neutralMinionsKilledEnemyJungle = 0, $combatPlayerScore = 0,
+                        $objectivePlayerScore = 0,  $totalPlayerScore = 0, $totalScoreRank = 0,
+                        $magicDamageDealtToChampions = 0, $physicalDamageDealtToChampions = 0,
+                        $trueDamageDealtToChampions = 0, $visionWardsBoughtInGame = 0, $sightWardsBoughtInGame = 0,
+                        $magicDamageDealt = 0, $physicalDamageDealt = 0, $trueDamageDealt = 0, $magicDamageTaken = 0,
+                        $physicalDamageTaken = 0, $trueDamageTaken = 0, $towerKills = 0, $wardsKilled = 0,
+                        $wardsPlaced = 0, $killingSprees = 0, $largestMultiKill = 0, $totalUnitsHealed = 0,
+                        $totalTimeCrowdControlDealt = 0) {
         $this->teamId = $teamId;
         $this->participantId = $participantId;
         $this->championId = $championId;
@@ -80,17 +177,8 @@ class Champion {
         $this->goldEarned = $goldearn;
         $this->goldSpent = $goldspent;
         $this->championLevel = $champLevel;
-        $this->firstBloodAssist = $firstBloodAssist;
-        $this->firstBloodKill = $firstBloodKill;
-        $this->firstInhibitorKill = $firstInhibitorKill;
-        $this->firstInhibitorAssist = $firstInhibitorAssist;
-        $this->firstTowerKill = $firstTowerKill;
-        $this->firstTowerAssist = $firstTowerAssist;
-        $this->inhibitorKills = $inhibitorKills;
-        $this->killingSprees = $killingSprees;
         $this->largestKillingSpree = $largestKillingSpree;
         $this->largestCriticalStrike = $largestCriticalStrike;
-        $this->towerKills = $towerKills;
         $this->doubleKills = $doubleKills;
         $this->tripleKills = $tripleKills;
         $this->quadraKills = $quadraKills;
@@ -110,6 +198,44 @@ class Champion {
         $this->totalDamageDealtToChampions = $totalDamageDealtToChampions;
         $this->totalDamageTaken = $totalDamageTaken;
         $this->totalHeal = $totalHeal;
+        $this->role = $role;
+        $this->lane = $lane;
+        /**
+         * Extended
+         */
+        $this->minionsKilled = $minionsKilled;
+        $this->neutralMinionsKilled = $neutralMinionsKilled;
+        $this->neutralMinionsKilledTeamJungle = $neutralMinionsKilledTeamJungle;
+        $this->neutralMinionsKilledEnemyJungle = $neutralMinionsKilledEnemyJungle;
+        $this->combatPlayerScore = $combatPlayerScore;
+        $this->objectivePlayerScore = $objectivePlayerScore;
+        $this->totalPlayerScore = $totalPlayerScore;
+        $this->totalScoreRank = $totalScoreRank;
+        $this->magicDamageDealtToChampions = $magicDamageDealtToChampions;
+        $this->physicalDamageDealtToChampions = $physicalDamageDealtToChampions;
+        $this->trueDamageDealtToChampions = $trueDamageDealtToChampions;
+        $this->visionWardsBoughtInGame = $visionWardsBoughtInGame;
+        $this->sightWardsBoughtInGame = $sightWardsBoughtInGame;
+        $this->magicDamageDealt = $magicDamageDealt;
+        $this->physicalDamageDealt = $physicalDamageDealt;
+        $this->trueDamageDealt = $trueDamageDealt;
+        $this->magicDamageTaken = $magicDamageTaken;
+        $this->physicalDamageTaken = $physicalDamageTaken;
+        $this->trueDamageTaken = $trueDamageTaken;
+        $this->firstBloodAssist = $firstBloodAssist;
+        $this->firstBloodKill = $firstBloodKill;
+        $this->firstInhibitorKill = $firstInhibitorKill;
+        $this->firstInhibitorAssist = $firstInhibitorAssist;
+        $this->firstTowerKill = $firstTowerKill;
+        $this->firstTowerAssist = $firstTowerAssist;
+        $this->inhibitorKills = $inhibitorKills;
+        $this->towerKills = $towerKills;
+        $this->wardsKilled = $wardsKilled;
+        $this->wardsPlaced = $wardsPlaced;
+        $this->killingSprees = $killingSprees;
+        $this->largestMultiKill = $largestMultiKill;
+        $this->totalUnitsHealed = $totalUnitsHealed;
+        $this->totalTimeCrowdControlDealt = $totalTimeCrowdControlDealt;
     }
 
     /*************** Setters ***************/
