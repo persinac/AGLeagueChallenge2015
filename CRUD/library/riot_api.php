@@ -497,8 +497,9 @@ class LeagueMatchDetails extends LeagueGames {
                             'teamId' => '',
                             'laneType' => '',
                             'buildingType' => '',
-                            'towerType' => '',);
-                        echo "EVENT TYPE: " . $event->eventType . ", ";
+                            'towerType' => '');
+                        //echo "EVENT TYPE: " . $event->eventType . ", ";
+                        $assistParticipants = "";
                         $event_obj->eventType = $event->eventType;
                         $event_obj->timestamp = $event->timestamp;
                         if($event->eventType == 'SKILL_LEVEL_UP') {
@@ -514,14 +515,49 @@ class LeagueMatchDetails extends LeagueGames {
                         } else if($event->eventType == 'ITEM_DESTROYED') {
                             $event_obj->itemId = $event->itemId;
                             $event_obj->participantId = $event->participantId;
+                        } else if($event->eventType == 'ITEM_SOLD') {
+                            $event_obj->itemId = $event->itemId;
+                            $event_obj->participantId = $event->participantId;
                         } else if($event->eventType == 'WARD_PLACED') {
                             $event_obj->creatorId = $event->creatorId;
+                            $event_obj->wardType = $event->wardType;
+                        } else if($event->eventType == 'WARD_KILL') {
+                            $event_obj->killerId = $event->killerId;
                             $event_obj->wardType = $event->wardType;
                         } else if($event->eventType == 'CHAMPION_KILL') {
                             $event_obj->killerId = $event->killerId;
                             $event_obj->victimId = $event->victimId;
                             $event_obj->pos_x = $event->position->x;
                             $event_obj->pos_y = $event->position->y;
+                            if(sizeof($event->assistingParticipantIds) > 0) {
+                                $t_participants = "";
+                                for($j = 0; $j < sizeof($event->assistingParticipantIds); $j++) {
+                                    $t_participants .= $event->assistingParticipantIds[$j] . ',';
+                                }
+                                $assistParticipants = substr($t_participants, 0, strlen($t_participants) - 1);
+                            }
+                            $event_obj->assistingParticipantIds = $assistParticipants;
+                        } else if($event->eventType == 'BUILDING_KILL') {
+                            $event_obj->killerId = $event->killerId;
+                            $event_obj->teamId = $event->teamId;
+                            $event_obj->pos_x = $event->position->x;
+                            $event_obj->pos_y = $event->position->y;
+                            $event_obj->laneType = $event->laneType;
+                            $event_obj->buildingType = $event->buildingType;
+                            $event_obj->towerType = $event->towerType;
+                            if(sizeof($event->assistingParticipantIds) > 0) {
+                                $t_participants = "";
+                                for($j = 0; $j < sizeof($event->assistingParticipantIds); $j++) {
+                                    $t_participants .= $event->assistingParticipantIds[$j] . ',';
+                                }
+                                $assistParticipants = substr($t_participants, 0, strlen($t_participants) - 1);
+                            }
+                            $event_obj->assistingParticipantIds = $assistParticipants;
+                        } else if($event->eventType == 'ELITE_MONSTER_KILL') {
+                            $event_obj->killerId = $event->killerId;
+                            $event_obj->pos_x = $event->position->x;
+                            $event_obj->pos_y = $event->position->y;
+                            $event_obj->monsterType = $event->monsterType;
                         }
                         $event_arr[] = $event_obj;
                     }
@@ -530,6 +566,98 @@ class LeagueMatchDetails extends LeagueGames {
             }
         }
         return $event_arr;
+    }
+
+    function MatchParticipantTimeline($arr) {
+        $pFrame_arr = array();
+        foreach($arr AS $i=>$val) {
+            if($i == 'timeline') {
+                for($i = 1; $i < sizeof($val->frames); $i++) {
+                    $curr_time = $val->frames[$i]->timestamp;
+                    foreach($val->frames[$i]->participantFrames AS $pFrame) {
+                        $pFrame_obj = new stdClass();
+                        $pFrame_obj->participantId = $pFrame->participantId;
+                        $pFrame_obj->timestamp = $curr_time;
+                        $pFrame_obj->pos_x = $pFrame->position->x;
+                        $pFrame_obj->pos_y = $pFrame->position->y;
+                        $pFrame_obj->currentGold = $pFrame->currentGold;
+                        $pFrame_obj->totalGold = $pFrame->totalGold;
+                        $pFrame_obj->level = $pFrame->level;
+                        $pFrame_obj->xp = $pFrame->xp;
+                        $pFrame_obj->minionsKilled = $pFrame->minionsKilled;
+                        $pFrame_obj->jungleMinionsKilled = $pFrame->jungleMinionsKilled;
+                        $pFrame_obj->dominionScore = $pFrame->dominionScore;
+                        $pFrame_obj->teamScore = $pFrame->teamScore;
+                        $pFrame_arr[] = $pFrame_obj;
+                    }
+                }
+
+            }
+        }
+        return $pFrame_arr;
+    }
+
+    function MatchParticipantDeltas($arr) {
+        $delta_arr = new stdClass();
+        foreach($arr AS $i=>$val) {
+            if($i == 'participants') {
+                for($j = 0; $j < sizeof($val); $j++) {
+
+                    $creepsPerMinDeltas = new stdClass();
+                    $creepsPerMinDeltas->teamId = $val[$j]->teamId;
+                    $creepsPerMinDeltas->participantId = $val[$j]->participantId;
+                    $creepsPerMinDeltas->zeroToTen = $val[$j]->timeline->creepsPerMinDeltas->zeroToTen;
+                    $creepsPerMinDeltas->tenToTwenty = $val[$j]->timeline->creepsPerMinDeltas->tenToTwenty;
+                    $creepsPerMinDeltas->twentyToThirty = $val[$j]->timeline->creepsPerMinDeltas->twentyToThirty;
+                    $creepsPerMinDeltas->thirtyToEnd = $val[$j]->timeline->creepsPerMinDeltas->thirtyToEnd;
+
+                    $xpPerMinDeltas = new stdClass();
+                    $xpPerMinDeltas->zeroToTen = $val[$j]->timeline->xpPerMinDeltas->zeroToTen;
+                    $xpPerMinDeltas->tenToTwenty = $val[$j]->timeline->xpPerMinDeltas->tenToTwenty;
+                    $xpPerMinDeltas->twentyToThirty = $val[$j]->timeline->xpPerMinDeltas->twentyToThirty;
+                    $xpPerMinDeltas->thirtyToEnd = $val[$j]->timeline->xpPerMinDeltas->thirtyToEnd;
+
+                    $goldPerMinDeltas = new stdClass();
+                    $goldPerMinDeltas->zeroToTen = $val[$j]->timeline->goldPerMinDeltas->zeroToTen;
+                    $goldPerMinDeltas->tenToTwenty = $val[$j]->timeline->goldPerMinDeltas->tenToTwenty;
+                    $goldPerMinDeltas->twentyToThirty = $val[$j]->timeline->goldPerMinDeltas->twentyToThirty;
+                    $goldPerMinDeltas->thirtyToEnd = $val[$j]->timeline->goldPerMinDeltas->thirtyToEnd;
+
+                    $csDiffPerMinDeltas = new stdClass();
+                    $csDiffPerMinDeltas->zeroToTen = $val[$j]->timeline->csDiffPerMinDeltas->zeroToTen;
+                    $csDiffPerMinDeltas->tenToTwenty = $val[$j]->timeline->csDiffPerMinDeltas->tenToTwenty;
+                    $csDiffPerMinDeltas->twentyToThirty = $val[$j]->timeline->csDiffPerMinDeltas->twentyToThirty;
+                    $csDiffPerMinDeltas->thirtyToEnd = $val[$j]->timeline->csDiffPerMinDeltas->thirtyToEnd;
+
+                    $xpDiffPerMinDeltas = new stdClass();
+                    $xpDiffPerMinDeltas->zeroToTen = $val[$j]->timeline->xpDiffPerMinDeltas->zeroToTen;
+                    $xpDiffPerMinDeltas->tenToTwenty = $val[$j]->timeline->xpDiffPerMinDeltas->tenToTwenty;
+                    $xpDiffPerMinDeltas->twentyToThirty = $val[$j]->timeline->xpDiffPerMinDeltas->twentyToThirty;
+                    $xpDiffPerMinDeltas->thirtyToEnd = $val[$j]->timeline->xpDiffPerMinDeltas->thirtyToEnd;
+
+                    $damageTakenPerMinDeltas = new stdClass();
+                    $damageTakenPerMinDeltas->zeroToTen = $val[$j]->timeline->damageTakenPerMinDeltas->zeroToTen;
+                    $damageTakenPerMinDeltas->tenToTwenty = $val[$j]->timeline->damageTakenPerMinDeltas->tenToTwenty;
+                    $damageTakenPerMinDeltas->twentyToThirty = $val[$j]->timeline->damageTakenPerMinDeltas->twentyToThirty;
+                    $damageTakenPerMinDeltas->thirtyToEnd = $val[$j]->timeline->damageTakenPerMinDeltas->thirtyToEnd;
+
+                    $damageTakenDiffPerMinDeltas = new stdClass();
+                    $damageTakenDiffPerMinDeltas->zeroToTen = $val[$j]->timeline->damageTakenDiffPerMinDeltas->zeroToTen;
+                    $damageTakenDiffPerMinDeltas->tenToTwenty = $val[$j]->timeline->damageTakenDiffPerMinDeltas->tenToTwenty;
+                    $damageTakenDiffPerMinDeltas->twentyToThirty = $val[$j]->timeline->damageTakenDiffPerMinDeltas->twentyToThirty;
+                    $damageTakenDiffPerMinDeltas->thirtyToEnd = $val[$j]->timeline->damageTakenDiffPerMinDeltas->thirtyToEnd;
+
+                    $delta_arr->creepsPerMinDeltas = $creepsPerMinDeltas;
+                    $delta_arr->xpPerMinDeltas = $xpPerMinDeltas;
+                    $delta_arr->goldPerMinDeltas = $goldPerMinDeltas;
+                    $delta_arr->csDiffPerMinDeltas = $csDiffPerMinDeltas;
+                    $delta_arr->xpDiffPerMinDeltas = $xpDiffPerMinDeltas;
+                    $delta_arr->damageTakenPerMinDeltas = $damageTakenPerMinDeltas;
+                    $delta_arr->damageTakenDiffPerMinDeltas = $damageTakenDiffPerMinDeltas;
+                }
+            }
+        }
+        return $delta_arr;
     }
 
     function GetFrameInterval($arr) {

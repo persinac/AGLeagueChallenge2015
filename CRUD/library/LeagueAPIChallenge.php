@@ -374,4 +374,172 @@ class LeagueAPIChallenge {
         }
         return $retVal;
     }
+
+    function InsertIntoMatchEvents($matchId,
+                                 $eventType,
+                                 $timestamp,
+                                 $skillSlot,
+                                 $participantId,
+                                 $levelUpType,
+                                 $itemId,
+                                 $creatorId,
+                                 $wardType, $killerId,$victimId,$assistingParticipants,$pos_x, $pos_y,
+                                 $teamId, $laneType, $buildingType, $towerType)
+    {
+        $retVal = -1;
+        $this->mys->autocommit(FALSE);
+        $query = "INSERT INTO MatchEvents VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        if ($matchId <= 1) {
+            $retVal = 4;
+        } else {
+            $stmt = $this->mys->prepare($query);
+            $stmt->bind_param('isiiisiisiisiiisss', $matchId,
+                $eventType,
+                $timestamp,
+                $skillSlot,
+                $participantId,
+                $levelUpType,
+                $itemId,
+                $creatorId,
+                $wardType, $killerId,$victimId,$assistingParticipants,$pos_x, $pos_y,
+                $teamId, $laneType, $buildingType, $towerType);
+            if ($result = $stmt->execute()) {
+                $stmt->close();
+                $this->mys->commit();
+                $retVal = 1;
+            } else {
+                $retVal = 0;
+                $this->mys->rollback();
+            }
+        }
+        return $retVal;
+    }
+
+    function InsertIntoMatchParticipantTimeline($matchId,
+                                                $participantId,
+                                                $pos_x,
+                                                $pos_y,
+                                                $currentGold,
+                                                $totalGold,
+                                                $level,
+                                                $xp,
+                                                $minionsKilled,
+                                                $jungleMinionsKilled,
+                                                $dominionScore,
+                                                $teamScore,
+                                                $timestamp)
+    {
+        $retVal = -1;
+        $this->mys->autocommit(FALSE);
+        $query = "INSERT INTO MatchParticipantTimeline VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        if ($matchId <= 1) {
+            $retVal = 4;
+        } else {
+            $stmt = $this->mys->prepare($query);
+            $stmt->bind_param('iiiiiiiiiiiii', $matchId,
+                $participantId,
+                $pos_x,
+                $pos_y,
+                $currentGold,
+                $totalGold,
+                $level,
+                $xp,
+                $minionsKilled,
+                $jungleMinionsKilled,
+                $dominionScore,
+                $teamScore,
+                $timestamp);
+            if ($result = $stmt->execute()) {
+                $stmt->close();
+                $this->mys->commit();
+                $retVal = 1;
+            } else {
+                $retVal = 0;
+                $this->mys->rollback();
+            }
+        }
+        return $retVal;
+    }
+
+    function InsertIntoMatchParticipantDeltas($matchId,
+                                              $teamId,
+                                              $participantId,
+                                              $creepsPerMin_zeroToTen,
+                                              $creepsPerMin_TenToTwenty,
+                                              $creepsPerMin_TwentyToThirty,
+                                              $creepsPerMin_ThirtyToEnd,
+                                              $xpPerMin_zeroToTen,
+                                              $xpPerMin_TenToTwenty,
+                                              $xpPerMin_TwentyToThirty,
+                                              $xpPerMin_ThirtyToEnd,
+                                              $goldPerMin_zeroToTen,
+                                              $goldPerMin_TenToTwenty,
+                                              $goldPerMin_TwentyToThirty,
+                                              $goldPerMin_ThirtyToEnd,
+                                              $xpDiffPerMin_zeroToTen,
+                                              $xpDiffPerMin_TenToTwenty,
+                                              $xpDiffPerMin_TwentyToThirty,
+                                              $xpDiffPerMin_ThirtyToEnd,
+                                              $damageTakenPerMin_zeroToTen,
+                                              $damageTakenPerMin_TenToTwenty,
+                                              $damageTakenPerMin_TwentyToThirty,
+                                              $damageTakenPerMin_ThirtyToEnd,
+                                              $damageTakenDiffPerMin_zeroToTen,
+                                              $damageTakenDiffPerMin_TenToTwenty,
+                                              $damageTakenDiffPerMin_TwentyToThirty,
+                                              $damageTakenDiffPerMin_ThirtyToEnd,
+                                              $csDiffPerMin_zeroToTen,
+                                              $csDiffPerMin_tenToTwenty,
+                                              $csDiffPerMin_twentyToThrity,
+                                              $csDiffPerMin_thirtyToEnd)
+    {
+        $retVal = -1;
+        $this->mys->autocommit(FALSE);
+        $query = "INSERT INTO MatchParticipantDeltaValues VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        if ($matchId <= 1) {
+            $retVal = 4;
+        } else {
+            $stmt = $this->mys->prepare($query);
+            $stmt->bind_param('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii', $matchId,
+                $teamId,
+                $participantId,
+                $creepsPerMin_zeroToTen,
+                $creepsPerMin_TenToTwenty,
+                $creepsPerMin_TwentyToThirty,
+                $creepsPerMin_ThirtyToEnd,
+                $xpPerMin_zeroToTen,
+                $xpPerMin_TenToTwenty,
+                $xpPerMin_TwentyToThirty,
+                $xpPerMin_ThirtyToEnd,
+                $goldPerMin_zeroToTen,
+                $goldPerMin_TenToTwenty,
+                $goldPerMin_TwentyToThirty,
+                $goldPerMin_ThirtyToEnd,
+                $xpDiffPerMin_zeroToTen,
+                $xpDiffPerMin_TenToTwenty,
+                $xpDiffPerMin_TwentyToThirty,
+                $xpDiffPerMin_ThirtyToEnd,
+                $damageTakenPerMin_zeroToTen,
+                $damageTakenPerMin_TenToTwenty,
+                $damageTakenPerMin_TwentyToThirty,
+                $damageTakenPerMin_ThirtyToEnd,
+                $damageTakenDiffPerMin_zeroToTen,
+                $damageTakenDiffPerMin_TenToTwenty,
+                $damageTakenDiffPerMin_TwentyToThirty,
+                $damageTakenDiffPerMin_ThirtyToEnd,
+                $csDiffPerMin_zeroToTen,
+                $csDiffPerMin_tenToTwenty,
+                $csDiffPerMin_twentyToThrity,
+                $csDiffPerMin_thirtyToEnd);
+            if ($result = $stmt->execute()) {
+                $stmt->close();
+                $this->mys->commit();
+                $retVal = 1;
+            } else {
+                $retVal = 0;
+                $this->mys->rollback();
+            }
+        }
+        return $retVal;
+    }
 }

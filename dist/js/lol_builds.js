@@ -42,7 +42,7 @@ function buildBasicStats() {
 
     $.ajax({
         type: "POST",
-        url: "/CRUD/lol/test_getAPIKey.php",
+        url: "/CRUD/lol/getURFMatches.php",
         dataType: "html",
         success: function(response) {
             console.log(response);
