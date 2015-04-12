@@ -542,4 +542,106 @@ class LeagueAPIChallenge {
         }
         return $retVal;
     }
+
+    /* READ OPERATIONS */
+
+    function GetFirstPageStats() {
+        $match_array = array();
+        $query = "select * from MatchHeader ORDER BY bucketId";
+
+        $this->mys->next_result();
+        if ($result = $this->mys->query($query)) {
+            while ($row = $result->fetch_assoc()) {
+                $detail = (object)array('bucketId' => '', 'matchId' => '', 'region' => '',
+                    'matchCreation' => '', 'matchDuration' => '', 'queueType' => '');
+                $detail->bucketId = $row['bucketId'];
+                $detail->matchId = $row['matchId'];
+                $detail->region = $row["region"];
+                $detail->matchCreation = $row["matchCreation"];
+                $detail->matchDuration = $row["matchDuration"];
+                $detail->queueType = $row["queueType"];
+                $match_array[] = $detail;
+            }
+            $result->free();
+        }
+        return $match_array;
+    }
+
+    function GetMinionKills() {
+        $minionsKilled = array();
+        $query = "select SUM(minionsKilled) AS 'minionsKilled' from MatchParticipantDetails_Extended";
+
+        $this->mys->next_result();
+        if ($result = $this->mys->query($query)) {
+            while ($row = $result->fetch_assoc()) {
+                $minionsKilled = $row["minionsKilled"];
+            }
+            $result->free();
+        }
+        return $minionsKilled;
+    }
+
+    function GetNeutralMinionKills() {
+        $minionsKilled = array();
+        $query = "select SUM(neutralMinionsKilled) AS 'minionsKilled' from MatchParticipantDetails_Extended";
+
+        $this->mys->next_result();
+        if ($result = $this->mys->query($query)) {
+            while ($row = $result->fetch_assoc()) {
+                $minionsKilled = $row["minionsKilled"];
+            }
+            $result->free();
+        }
+        return $minionsKilled;
+    }
+
+    function GetNumOfTimeUrgotPicked() {
+        $urgotPicked = -1;
+        $query = "select COUNT(*) AS 'urgotPicked' from MatchParticipantDetails where championid = 6";
+
+        $this->mys->next_result();
+        if ($result = $this->mys->query($query)) {
+            while ($row = $result->fetch_assoc()) {
+                $urgotPicked = $row["urgotPicked"];
+            }
+            $result->free();
+        }
+        return $urgotPicked;
+    }
+
+    function GetNumOfTimeUrgotBanned() {
+        $urgotBanned = -1;
+        $query = "select COUNT(*) AS 'urgotBanned' from MatchHeader mh
+                  JOIN MatchDetails md ON mh.matchId = md.matchId
+                  JOIN MatchBans mb ON  mh.matchId = mb.matchId
+                    where mh.bucketId > 1
+                  AND (mb.firstBan = 6 OR mb.secondBan = 6 OR mb.thirdBan = 6 OR mb.fourthBan = 6 OR mb.fifthBan = 6 OR mb.sixthBan = 6)";
+
+        $this->mys->next_result();
+        if ($result = $this->mys->query($query)) {
+            while ($row = $result->fetch_assoc()) {
+                $urgotBanned = $row["urgotBanned"];
+            }
+            $result->free();
+        }
+        return $urgotBanned;
+    }
+
+    function GetNumOfTimeUrgotWon() {
+        $urgotWins = -1;
+        $query = "select COUNT(*) AS 'urgotWins' from MatchParticipantDetails mpd
+                  JOIN MatchTeamDetails mtd ON mpd.matchId = mtd.matchId
+	                                          AND mpd.teamId = mtd.teamId
+                  where championid = 6
+                    AND mtd.winner = 1";
+
+        $this->mys->next_result();
+        if ($result = $this->mys->query($query)) {
+            while ($row = $result->fetch_assoc()) {
+                $urgotWins = $row["urgotWins"];
+            }
+            $result->free();
+        }
+        return $urgotWins;
+    }
 }

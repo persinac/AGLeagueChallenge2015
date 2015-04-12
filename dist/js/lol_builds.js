@@ -39,13 +39,14 @@ function buildBasicStats() {
             });
         }
     });*/
-
+    response = "<h3>Coming soon!</h3><p>We've built the backend, we'll get it visualized shortly!</p>";
+    $("#dyn_content").html(response);
     $.ajax({
         type: "POST",
-        url: "/CRUD/lol/getURFMatches.php",
+        url: "/CRUD/lol/challenge_getFrontPage.php",
         dataType: "html",
         success: function(response) {
-            console.log(response);
+            //console.log(response);
             $("#dyn_content").html(response);
         }
     });
@@ -163,6 +164,19 @@ function updateLanePriority(cid) {
 }
 
 function matchDetails(matchid) {
+    $.ajax({
+        type: "POST",
+        url: "/CRUD/lol/getMatchDetails.php",
+        data: {"matchid":matchid},
+        dataType: "html",
+        success: function(response) {
+            //console.log(response);
+            $("#dyn_content").html(response);
+        }
+    });
+}
+
+function bucketDetails(matchid) {
     $.ajax({
         type: "POST",
         url: "/CRUD/lol/getMatchDetails.php",

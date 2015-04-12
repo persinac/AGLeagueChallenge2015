@@ -96,7 +96,8 @@
 <script src="dist/jq_ui/js/jquery-ui-1.10.4.custom.min.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/floatthead/1.2.10/jquery.floatThead.js"></script>
-<script src="dist/js/lol_builds.js"></script>
+<!--<script src="dist/js/lol_builds.js"></script>-->
+<script src="dist/js/challenge_builds.js"></script>
 <script src="dist/js/api_interface.js"></script>
 <script src="dist/js/graphing_utility.js"></script>
 <script src="dist/js/svg-pan-zoom.min.js"></script>
@@ -129,17 +130,17 @@
         if(toParse == "#basic") {
             buildBasicStats();
         } else if(toParse == "#players") {
-            buildPlayers();
+            //buildPlayers();
         } else if(toParse == "#sbs") {
-            buildAPIView();
+           // buildAPIView();
         } else if(toParse == "#pac") {
-            printAllChampions();
+           // printAllChampions();
         } else if(toParse == "#cpr") {
-            printChampionPriority();
+           // printChampionPriority();
         } else if(toParse == "#gar") {
-            buildGarrettTestPage();
+           // buildGarrettTestPage();
         } else if(toParse == "#gwp") {
-            buildGroupPage();
+           // buildGroupPage();
         } else {
             buildBasicStats();
         }

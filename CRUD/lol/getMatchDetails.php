@@ -1,4 +1,4 @@
-<?php require_once('../../Connections/lol_conn.php'); ?>
+<?php require_once('../../Connections/lol_api_challenge_conn.php'); ?>
 <?php
 /**
  * Created by PhpStorm.
@@ -8,17 +8,11 @@
  */
 
 session_start();
-/*
-if(!(isset($_SESSION['MM_Username'])))
-{
-    header("Location: Error401UnauthorizedAccess.php");
-}*/
 
-include('../../CRUD/library/league.php');
+include('../../CRUD/library/LeagueAPIChallenge.php');
 $matchid = $_POST['matchid'];
-$lol = new league();
+$lol = new LeagueAPIChallenge('na', $lol_host, $lol_un, $lol_pw, $lol_db);
 
-$lol->NewConnection($lol_host, $lol_un, $lol_pw, $lol_db);
 $lol->BuildMatchDetails($matchid);
 $det = $lol->GetMatchDetails();
 foreach($det AS $key => $val) {
