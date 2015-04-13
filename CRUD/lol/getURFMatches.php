@@ -15,12 +15,31 @@ set_time_limit(0);
 $lol = new Buckets('na', $my_key, $lol_host, $lol_un, $lol_pw, $lol_db);
 $my_db_operations = new LeagueAPIChallenge('na', $lol_host, $lol_un, $lol_pw, $lol_db);
 $time_array = array();
+
+/**
+ * These two lines retrieve the time interval to retrieve.
+ * I am retrieving data by 30min intervals
+ * For instance, at midnight, it will return:
+ *      $retVal->hour = 0
+ *      $retVal->minute = 0
+ *
+ * Then as the day progresses and this script gets called, the TimeTable will be updated.
+ * So at 4:30am, it will return:
+ *      $retVal->hour = 4
+ *      $retVal->minute = 30
+ *
+ * At 11:59pm every night (EST), a script called: resetTimeTable will
+ * be run and it will reset the time table.
+ */
+$time_checker = new TimeChecker('na', $lol_host, $lol_un, $lol_pw, $lol_db);
+$retVal = $time_checker->GetTimeToUse();
+
 /**
  * Build time intervals
  */
 $time = "";
-for($h = 8; $h < 15; $h++) {
-    for($m = 0; $m < 60; $m += 5) {
+for($h = $retVal->hour; $h < $retVal->hour + 1; $h++) {
+    for($m = $retVal->minute; $m < $retVal->minute + 30; $m += 5) {
         if($h < 10) {
             $time = "0" . $h . ":";
         } else {
@@ -34,12 +53,13 @@ for($h = 8; $h < 15; $h++) {
         $time_array[] = $time;
     }
 }
+$time_checker->CloseConnection();
 // sizeof($time_array)
 $regional_endpoints = array('br','eune','euw','kr','lan','las','na','oce','ru','tr');
 for($rep = 0; $rep < sizeof($regional_endpoints); $rep++) {
     $lol->SetRegion($regional_endpoints[$rep]);
     $my_db_operations->SetRegion($regional_endpoints[$rep]);
-    for($u = 0; $u < 1; $u++) {
+    for($u = 0; $u < sizeof($time_array); $u++) {
         echo "<p>".$time_array[$u]."</p>";
         $date2 = date("Y-m-d H:i:s", strtotime(date("Y-m-d ".$time_array[$u]."") . " GMT"));
         $val = strtotime($date2);

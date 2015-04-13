@@ -58,6 +58,36 @@ class LeagueAPIChallenge {
         }
     }
 
+    function insertIntoAPILog($url, $data, $whereDidIComeFrom) {
+        $query = "INSERT INTO api_log VALUES(?,?,?,?,?)";
+        $date = date("Y-m-d H:i:s");
+        $id = $this->getMaxAPIID();
+        $stmt = $this->mys->prepare($query);
+        $stmt->bind_param('issss', $id, $url, $date, $data, $whereDidIComeFrom);
+        if ($result = $stmt->execute()) {
+            $stmt->close();
+            $this->mys->commit();
+            $retVal = 1;
+        } else {
+            $retVal = 0;
+        }
+
+        return $retVal;
+    }
+
+    function getMaxAPIID() {
+        $query = "SELECT MAX(id) AS id FROM api_log;";
+        if ($result = $this->mys->query($query)) {
+            while ($row = $result->fetch_assoc()) {
+                $retVal = $row["id"] + 1;
+            }
+            $result->free();
+        } else {
+            $retVal = -1;
+        }
+        return $retVal;
+    }
+
     function SetRegion($reg) {
         $this->region = $reg;
     }
@@ -650,5 +680,94 @@ class LeagueAPIChallenge {
             $result->free();
         }
         return $urgotWins;
+    }
+}
+
+class TimeChecker extends LeagueAPIChallenge {
+
+    function __construct($reg, $host, $user, $pass, $database) {
+        $this->region = $reg;
+        parent::__construct($reg, $host, $user, $pass, $database);
+    }
+
+    function GetTime()
+    {
+        $time = new stdClass();
+        $query = "select hour, firstHalf, secondHalf from TimeCheck
+                    where (firstHalf = 0 OR secondHalf = 0)
+                    ORDER BY hour
+                    LIMIT 1;";
+
+        $this->mys->next_result();
+        if ($result = $this->mys->query($query)) {
+            while ($row = $result->fetch_assoc()) {
+                $time->hour = $row['hour'];
+                $time->firstHalf = $row['firstHalf'];
+                $time->secondHalf = $row['secondHalf'];
+            }
+            $result->free();
+        }
+        return $time;
+    }
+
+    function GetTimeToUse() {
+        $retVal = new stdClass();
+
+        $val = $this->GetTime();
+        $retVal->hour = $val->hour;
+        if($val->firstHalf == 0) {
+            $retVal->minute = "0";
+            $retVal->updateRetVal = $this->UpdateTimeTable($val->hour, 1, 0);
+        } else {
+            $retVal->minute = "30";
+            $retVal->updateRetVal = $this->UpdateTimeTable($val->hour, 1, 1);
+        }
+        return $retVal;
+    }
+
+    function UpdateTimeTable($hour, $firstHalf, $secondHalf) {
+        $retVal = new stdClass();
+        $this->mys->autocommit(FALSE);
+        $query = "update TimeCheck
+                    set firstHalf = ?, secondHalf = ?
+                    where hour = ?;";
+
+        $this->mys->next_result();
+        $stmt = $this->mys->prepare($query);
+        $stmt->bind_param('iii', $firstHalf, $secondHalf, $hour);
+        if ($result = $stmt->execute()) {
+            $stmt->close();
+            $this->mys->commit();
+            $this->mys->next_result();
+            $retVal->insertVal = $this->insertIntoAPILog("NONE", "HOUR: $hour, FirstHour: $firstHalf, SECOND: $secondHalf", "UpdateTimeTable()");
+            $retVal->updateVal = 1;
+        } else {
+            $retVal->updateVal = 0;
+            $this->mys->rollback();
+            $this->mys->next_result();
+            $retVal->insertVal = $this->insertIntoAPILog("NONE", "UPDATE TIMETABLE FAIL", "UpdateTimeTable()");
+        }
+        return $retVal;
+    }
+
+    function ResetTimeTable() {
+        $retVal = -1;
+        $this->mys->autocommit(FALSE);
+        $query = "update TimeCheck
+                    set firstHalf = 0, secondHalf = 0;";
+
+        $this->mys->next_result();
+        $stmt = $this->mys->prepare($query);
+        if ($result = $stmt->execute()) {
+            $stmt->close();
+            $this->mys->commit();
+            $this->insertIntoAPILog("NONE", "RESET TIMETABLE SUCCESS", "ResetTimeTable()");
+            $retVal = 1;
+        } else {
+            $retVal = 0;
+            $this->mys->rollback();
+            $this->insertIntoAPILog("NONE", "RESET TIMETABLE FAIL", "ResetTimeTable()");
+        }
+        return $retVal;
     }
 }
