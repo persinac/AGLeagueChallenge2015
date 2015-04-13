@@ -604,6 +604,8 @@ class LeagueAPIChallenge {
         return $match_array;
     }
 
+
+    //region MINION FUNCTIONS
     function GetMinionKills() {
         $minionsKilled = array();
         $query = "select SUM(minionsKilled) AS 'minionsKilled' from MatchParticipantDetails_Extended";
@@ -631,6 +633,12 @@ class LeagueAPIChallenge {
         }
         return $minionsKilled;
     }
+    //endregion
+
+    //region URGOT READ FUNCTIONS
+    /**
+     * Urgot read functions
+     */
 
     function GetNumOfTimeUrgotPicked() {
         $urgotPicked = -1;
@@ -681,6 +689,8 @@ class LeagueAPIChallenge {
         }
         return $urgotWins;
     }
+    //endregion
+
 }
 
 class TimeChecker extends LeagueAPIChallenge {
@@ -692,6 +702,7 @@ class TimeChecker extends LeagueAPIChallenge {
 
     function GetTime()
     {
+        $this->mys->autocommit(TRUE);
         $time = new stdClass();
         $query = "select hour, firstHalf, secondHalf from TimeCheck
                     where (firstHalf = 0 OR secondHalf = 0)
@@ -737,16 +748,18 @@ class TimeChecker extends LeagueAPIChallenge {
         $stmt->bind_param('iii', $firstHalf, $secondHalf, $hour);
         if ($result = $stmt->execute()) {
             $stmt->close();
-            $this->mys->commit();
             $this->mys->next_result();
             $retVal->insertVal = $this->insertIntoAPILog("NONE", "HOUR: $hour, FirstHour: $firstHalf, SECOND: $secondHalf", "UpdateTimeTable()");
             $retVal->updateVal = 1;
+            $this->mys->commit();
         } else {
             $retVal->updateVal = 0;
+            $retVal->insertVal = $this->insertIntoAPILog("NONE", "UPDATE TIMETABLE FAIL", "UpdateTimeTable()");
             $this->mys->rollback();
             $this->mys->next_result();
-            $retVal->insertVal = $this->insertIntoAPILog("NONE", "UPDATE TIMETABLE FAIL", "UpdateTimeTable()");
+
         }
+        $this->mys->autocommit(TRUE);
         return $retVal;
     }
 
@@ -760,14 +773,17 @@ class TimeChecker extends LeagueAPIChallenge {
         $stmt = $this->mys->prepare($query);
         if ($result = $stmt->execute()) {
             $stmt->close();
-            $this->mys->commit();
+
             $this->insertIntoAPILog("NONE", "RESET TIMETABLE SUCCESS", "ResetTimeTable()");
             $retVal = 1;
+            $this->mys->commit();
         } else {
             $retVal = 0;
-            $this->mys->rollback();
+
             $this->insertIntoAPILog("NONE", "RESET TIMETABLE FAIL", "ResetTimeTable()");
+            $this->mys->rollback();
         }
+        $this->mys->autocommit(TRUE);
         return $retVal;
     }
 }

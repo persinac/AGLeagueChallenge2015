@@ -301,8 +301,8 @@ for($rep = 0; $rep < sizeof($regional_endpoints); $rep++) {
             */
             $match->CloseConnection();
         }
-        echo "Sleeping...</br>";
-        sleep(11);
+        //echo "Sleeping...</br>";
+        //sleep(11);
     }
     echo "Finished with " . $regional_endpoints[$rep] . "</br>";
 }
