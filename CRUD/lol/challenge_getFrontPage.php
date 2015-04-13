@@ -17,9 +17,9 @@ $lol = new LeagueAPIChallenge('na', $lol_host, $lol_un, $lol_pw, $lol_db);
 $final_html = "";
 
 $retVal = $lol->GetFirstPageStats();
-$final_html = '<div name="all_matches_row" class="row">';
-$final_html .= '<div name="match_header_div" class="col-lg-9">';
-//$final_html .= '<div class="recent_games_size">';
+$final_html = '<div name="all_matches_row" class="row ">';
+$final_html .= '<div name="match_header_div" id="match_header_div" class="col-lg-7 ">';
+$final_html .= '<div class="main_match_table">';
 $final_html .= '<table id="list_all_matches" class="table table-striped table-hover">';
 $final_html .= '<thead class="header_bg">';
 $final_html .= '<th>Bucket ID</th>';
@@ -27,7 +27,6 @@ $final_html .= '<th>Match ID</th>';
 $final_html .= '<th>Region</th>';
 $final_html .= '<th>Match Creation</th>';
 $final_html .= '<th>Match Duration</th>';
-$final_html .= '<th>Game Type</th></tr>';
 $final_html .= '</thead>';
 $final_html .= '<tbody>';
 
@@ -38,15 +37,15 @@ for($i = 0; $i < sizeof($retVal); $i++) {
     $final_html .= '<td>'.$retVal[$i]->region.'</td>';
     $final_html .= '<td>' . epochToDate($retVal[$i]->matchCreation) . '</td>';
     $final_html .= '<td>' . gmdate("H:i:s", $retVal[$i]->matchDuration) . '</td>';
-    $final_html .= '<td>'.$retVal[$i]->queueType.'</td>';
     $final_html .= '</tr>';
 }
 
 
 
 $final_html .= '</tbody></table>';
+$final_html .= '</div><!-- End recent_games_size -->';
 $final_html .= '</div><!-- End HEADER_DIV -->';
-$final_html .= '<div name="match_extras_div" class="col-lg-3">';
+$final_html .= '<div name="match_extras_div" class="col-lg-5">';
 $final_html .= '<h4>Minions Sacrificed: '.$lol->GetMinionKills().'</h4>';
 $final_html .= '<h4>Neutral Minions Terrorized: '.$lol->GetNeutralMinionKills().'</h4>';
 $final_html .= '<h4>Number of times Urgot was picked: '.$lol->GetNumOfTimeUrgotPicked().'</h4>';

@@ -73,3 +73,8 @@ a:hover {
 .groupWinperc {
     background-color: #00FF00 !important;
 }
+
+.main_match_table {
+    height: 500px;
+    overflow: auto;
+}

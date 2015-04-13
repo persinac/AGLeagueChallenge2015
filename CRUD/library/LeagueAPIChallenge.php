@@ -58,8 +58,15 @@ class LeagueAPIChallenge {
         }
     }
 
+    function SetRegion($reg) {
+        $this->region = $reg;
+    }
 
     /** GETTERS **/
+
+    function GetRegion() {
+        return $this->region;
+    }
 
     function GetMaxBucketId() {
         $retVal = -1;

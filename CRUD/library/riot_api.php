@@ -21,7 +21,8 @@ include('../../CRUD/library/Team.php');
 class riot_api {
     var $key = '';
     var $region = '';
-    var $url_prefix = 'https://na.api.pvp.net/api/lol/';
+    var $url_https = 'https://';
+    var $url_prefix = '.api.pvp.net/api/lol/';
     public $mys;
 
     function __construct($reg, $host, $user, $pass, $database) {
@@ -73,7 +74,7 @@ class riot_api {
     }
 
     function GetURLPre() {
-        return $this->url_prefix;
+        return $this->url_https . $this->GetRegion() . $this->url_prefix;
     }
 
     function insertIntoAPILog($url, $data, $whereDidIComeFrom) {

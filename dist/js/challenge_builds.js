@@ -14,6 +14,14 @@ function buildBasicStats() {
         success: function(response) {
             //console.log(response);
             $("#dyn_content").html(response);
+
+            var $table = $('#list_all_matches');
+            $table.floatThead({
+                scrollContainer: function($table){
+                    console.log("What? "+$table.closest('.wrapper'));
+                    return $table.closest('.main_match_table');
+                }
+            });
         }
     });
 }
