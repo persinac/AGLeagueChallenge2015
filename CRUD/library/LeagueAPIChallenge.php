@@ -604,6 +604,18 @@ class LeagueAPIChallenge {
         return $match_array;
     }
 
+    function GetMatchID($matchId) {
+        $retVal = -1;
+        $query = "select * from Buckets
+                    WHERE matchId = $matchId";
+
+        $this->mys->next_result();
+        if ($result = $this->mys->query($query)) {
+            $retVal = $result->num_rows;
+            $result->free();
+        }
+        return $retVal;
+    }
 
     //region MINION FUNCTIONS
     function GetMinionKills() {
@@ -704,17 +716,19 @@ class TimeChecker extends LeagueAPIChallenge {
     {
         $this->mys->autocommit(TRUE);
         $time = new stdClass();
-        $query = "select hour, firstHalf, secondHalf from TimeCheck
+        $query = "select hour, firstHalf, secondHalf, currentDate from TimeCheck
                     where (firstHalf = 0 OR secondHalf = 0)
                     ORDER BY hour
                     LIMIT 1;";
 
         $this->mys->next_result();
         if ($result = $this->mys->query($query)) {
+            echo "NUM ROWS: ".$result->num_rows();
             while ($row = $result->fetch_assoc()) {
                 $time->hour = $row['hour'];
                 $time->firstHalf = $row['firstHalf'];
                 $time->secondHalf = $row['secondHalf'];
+                $time->currentDate = $row['currentDate'];
             }
             $result->free();
         }
@@ -726,6 +740,7 @@ class TimeChecker extends LeagueAPIChallenge {
 
         $val = $this->GetTime();
         $retVal->hour = $val->hour;
+        $retVal->currentDate = $val->currentDate;
         if($val->firstHalf == 0) {
             $retVal->minute = "0";
             $retVal->updateRetVal = $this->UpdateTimeTable($val->hour, 1, 0);
@@ -763,14 +778,22 @@ class TimeChecker extends LeagueAPIChallenge {
         return $retVal;
     }
 
-    function ResetTimeTable() {
+    function ResetTimeTable($dateToUse = "") {
         $retVal = -1;
+        $date = "";
+        if(strlen($dateToUse) > 0) {
+            $date = $dateToUse;
+        } else {
+            $date = date("Y-m-d");
+        }
+
         $this->mys->autocommit(FALSE);
         $query = "update TimeCheck
-                    set firstHalf = 0, secondHalf = 0;";
+                    set firstHalf = 0, secondHalf = 0, currentDate = ?;";
 
         $this->mys->next_result();
         $stmt = $this->mys->prepare($query);
+        $stmt->bind_param('s', $date);
         if ($result = $stmt->execute()) {
             $stmt->close();
 
