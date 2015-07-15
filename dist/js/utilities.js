@@ -1,8 +1,8 @@
 
-function generateTimeDropDowns(h,m,s) {
+function generateTimeDropDowns(h,m,s,name) {
 	var retVal = '';
 	if(h == 1) {
-		retVal += '<select id="rft_hr_selector">';
+		retVal += '<select name="rft_hr_selector_'+name+'" id="rft_hr_selector_'+name+'">';
 		for(var i = 0; i < 60; i++) {
 			if(i < 10) {
 				retVal += '<option value="0'+i+'">0'+i+'</option>';
@@ -13,7 +13,7 @@ function generateTimeDropDowns(h,m,s) {
 		retVal += '</select> : ';
 	}
 	if(m == 1) {
-		retVal += '<select id="rft_min_selector">';
+		retVal += '<select name="rft_min_selector_'+name+'" id="rft_min_selector_'+name+'">';
 		for(var i = 0; i < 60; i++) {
 			if(i < 10) {
 				retVal += '<option value="0'+i+'">0'+i+'</option>';
@@ -24,7 +24,7 @@ function generateTimeDropDowns(h,m,s) {
 		retVal += '</select> : ';
 	}
 	if(s == 1) {
-		retVal += '<select id="rft_sec_selector">';
+		retVal += '<select name="rft_sec_selector_'+name+'" id="rft_sec_selector_'+name+'">';
 		for(var i = 0; i < 60; i++) {
 			if(i < 10) {
 				retVal += '<option value="0'+i+'">0'+i+'</option>';

@@ -71,7 +71,8 @@ for($day = 5; $day < 13; $day++) {
 }
 
 // sizeof($time_array)
-$regional_endpoints = array('br','eune','euw','kr','lan','las','na','oce','ru','tr');
+//$regional_endpoints = array('br','eune','euw','kr','lan','las','na','oce','ru','tr');
+$regional_endpoints = array('eune','euw','kr','lan','las','na','oce','ru','tr');
 for($rep = 0; $rep < sizeof($regional_endpoints); $rep++) {
     $lol->SetRegion($regional_endpoints[$rep]);
     $my_db_operations->SetRegion($regional_endpoints[$rep]);
@@ -83,12 +84,18 @@ for($rep = 0; $rep < sizeof($regional_endpoints); $rep++) {
             echo "<p>TIME: " . $time_array[$u] . ", EPOCH: " . $val . ", DATE: $date2</p>";
             $lol->SetBeginDate($val);
             $matches = json_decode($lol->GetBucketOfMatches());
-
+	    
             /**
              * 1. Get max bucketID from table
              */
             $bucketId = $my_db_operations->GetMaxBucketId() + 1;
-            for ($i = 0; $i < sizeof($matches); $i++) {
+	    
+	    $count = 0;
+	    if(sizeof($matches) > 5) {
+		$count = 5;
+	    } else { $count = sizeof($matches); }
+
+            for ($i = 0; $i < $count; $i++) {
                 $curr_matchId = $matches[$i];
 
                 if ($my_db_operations->GetMatchID($curr_matchId) == 0) {

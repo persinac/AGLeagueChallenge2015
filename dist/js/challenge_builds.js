@@ -5,7 +5,7 @@
  * Created by APersinger on 12/03/14.
  */
 function buildBasicStats() {
-    response = "<h3>Coming soon!</h3><p>We've built the backend, we'll get it visualized shortly!</p>";
+    response = "<h3>Currently loading thousands of matches</h3><p>Please come back tomorrow!</p>";
     $("#dyn_content").html(response);
     $.ajax({
         type: "POST",
