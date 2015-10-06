@@ -55,7 +55,7 @@ class riot_api {
             CURLOPT_URL => $url_to_exec
         ));
         $result = curl_exec($ch);
-        $this->insertIntoAPILog($url_to_exec, substr($result, 0, 1000), $whereDidIComeFrom);
+        $this->insertIntoAPILog($url_to_exec, "KEY: ". $this->key ." :: ".substr($result, 0, 800), $whereDidIComeFrom);
         curl_close($ch);
         return $result;
     }
