@@ -1,5 +1,6 @@
 <?php
 require_once('../../Connections/lol_api_challenge_conn.php');
+require_once('../../keys/key.php');
 ?>
 <?php
 /**
@@ -19,7 +20,7 @@ include('../../CRUD/library/Team.php');
  * these classes.
  */
 class riot_api {
-    var $key = '';
+    var $key = $my_key;
     var $region = '';
     var $url_https = 'https://';
     var $url_prefix = '.api.pvp.net/api/lol/';
